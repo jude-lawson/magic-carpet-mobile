@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Linking , AsyncStorage } from 'react-native';
-import SafariView from 'react-native-safari-view';
+import { StyleSheet, Text, Linking } from 'react-native';
+// import SafariView from 'react-native-safari-view';
+import { WebBrowser } from 'expo';
 import SInfo from 'react-native-sensitive-info'
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
 
@@ -13,17 +14,16 @@ export default class LoginPage extends Component {
     super(props);
 
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      result: null
     }
 
     this.handleCallback = this.handleCallback.bind(this)
   };
 
-  openURL = (url) => {
-    SafariView.show({
-      url: url,
-      fromBottom: true,
-    })
+  openURL = async (url) => {
+   let result = await WebBrowser.openBrowserAsync(url)
+   this.setState({ result })
   };
 
   componentDidMount() {
@@ -46,7 +46,7 @@ export default class LoginPage extends Component {
         SInfo.setItem('lyftToken', parsedResponse['access_token'], {});
         SInfo.setItem('lyftRefreshToken', parsedResponse['refresh_token'], {});
       }
-      SafariView.dismiss();
+      WebBrowser.dismissBrowser();
     })
   }
 
@@ -60,6 +60,7 @@ export default class LoginPage extends Component {
     return (
       <React.Fragment>
         {page}
+        <Text></Text>
       </React.Fragment>
     );
   }
