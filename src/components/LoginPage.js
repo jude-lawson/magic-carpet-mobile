@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Linking } from 'react-native';
+import { StyleSheet, Linking } from 'react-native';
 // import SafariView from 'react-native-safari-view';
-import { WebBrowser } from 'expo';
+import { AuthSession, WebBrowser } from 'expo';
 import SInfo from 'react-native-sensitive-info'
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
 
@@ -22,8 +22,10 @@ export default class LoginPage extends Component {
   };
 
   openURL = async (url) => {
-   let result = await WebBrowser.openBrowserAsync(url)
-   this.setState({ result })
+    let result = await AuthSession.startAsync({
+      authUrl: url
+    });
+    this.setState({ result });
   };
 
   componentDidMount() {
@@ -31,6 +33,7 @@ export default class LoginPage extends Component {
   }
 
   handleCallback(event) {
+    console.log('In callback handler')
     const auth_code = event.url.split('?')[1].split('&')[0].split('=')[1]
     const enc_client_auth = btoa(`${lyft_client_id}:${lyft_client_secret}`)
 
@@ -43,8 +46,8 @@ export default class LoginPage extends Component {
         this.setState(() => ({
           loggedIn: true
         }));
-        SInfo.setItem('lyftToken', parsedResponse['access_token'], {});
-        SInfo.setItem('lyftRefreshToken', parsedResponse['refresh_token'], {});
+        // SInfo.setItem('lyftToken', parsedResponse['access_token'], {});
+        // SInfo.setItem('lyftRefreshToken', parsedResponse['refresh_token'], {});
       }
       WebBrowser.dismissBrowser();
     })
@@ -57,10 +60,10 @@ export default class LoginPage extends Component {
     } else {
       page = <LyftLoginButton clickEvent={() => this.openURL(`https://www.lyft.com/oauth/authorize_app?client_id=${lyft_client_id}&scope=public%20profile%20rides.read%20rides.request%20offline&state=%3Cstate_string%3E&response_type=code`)}/>
     }
+
     return (
       <React.Fragment>
         {page}
-        <Text></Text>
       </React.Fragment>
     );
   }
