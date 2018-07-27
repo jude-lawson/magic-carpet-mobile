@@ -11,7 +11,8 @@ export default class SettingsIcon extends Component {
     return (
       <Icon
         containerStyle={styles.settingsIcon}
-        name='settings'
+        name='ios-cog'
+        type='ionicon'
         size={40}
         color='#7998fe'
         onPress={this.props.renderSettings} />

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Linking } from 'react-native';
 // import SafariView from 'react-native-safari-view';
+import { encode as btoa, decode as atob } from 'base-64';
 import { AuthSession, WebBrowser } from 'expo';
 import SInfo from 'react-native-sensitive-info'
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
@@ -22,14 +23,16 @@ export default class LoginPage extends Component {
   };
 
   openURL = async (url) => {
-    let result = await AuthSession.startAsync({
-      authUrl: url
-    });
-    this.setState({ result });
+    Linking.addEventListener( 'url', this.handleCallback );
+    let result = await WebBrowser.openBrowserAsync(url)
+    // let result = await AuthSession.startAsync({
+    //   authUrl: url
+    // });
+    // this.setState({ result });
   };
 
   componentDidMount() {
-    Linking.addEventListener( 'url', this.handleCallback );
+    console.log('Component is mounted')
   }
 
   handleCallback(event) {
@@ -48,8 +51,8 @@ export default class LoginPage extends Component {
         }));
         // SInfo.setItem('lyftToken', parsedResponse['access_token'], {});
         // SInfo.setItem('lyftRefreshToken', parsedResponse['refresh_token'], {});
+        WebBrowser.dismissBrowser();
       }
-      WebBrowser.dismissBrowser();
     })
   }
 

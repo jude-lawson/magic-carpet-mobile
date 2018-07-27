@@ -7,6 +7,7 @@ import MagicCarpetButton from './MagicCarpetButton';
 import EstimatePage from './EstimatePage';
 import HomeButton from './HomeButton';
 import SettingsPage from './SettingsPage';
+import UserAvatar from './UserAvatar';
 
 export default class LandingPage extends Component {
   constructor(props) {
@@ -67,6 +68,7 @@ export default class LandingPage extends Component {
       pageContent = (
         <React.Fragment>
           <HomeButton handleHomeClick={this.handleHomeClick} />
+          <UserAvatar />
           <SettingsIcon renderSettings={this.renderSettingsPage} />
           <MagicCarpetButton clickEvent={this.createAdventure} />
         </React.Fragment>

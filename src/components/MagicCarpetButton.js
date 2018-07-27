@@ -5,6 +5,7 @@ export default class MagicCarpetButton extends Component {
   constructor(props) {
     super(props);
   }
+  
   render() {
     return (
       <Button
@@ -16,6 +17,7 @@ export default class MagicCarpetButton extends Component {
           borderRadius: 50,
           width: 200
         }}
+        containerViewStyle={{ borderRadius: 50 }}
         onPress={this.props.clickEvent} />
     );
   }

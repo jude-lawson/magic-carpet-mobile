@@ -13,7 +13,8 @@ export default class HomeButton extends Component {
         containerStyle={styles.homeButtonContainer}
         size={50}
         color='#7998fe'
-        name='home'
+        name='ios-home'
+        type='ionicon'
         onPress={this.props.handleHomeClick} />
     );
   }
