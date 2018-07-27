@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "devtools": "react-devtools"
   },
   "dependencies": {
     "expo": "^29.0.0",
@@ -15,5 +16,8 @@
     "react-native-elements": "^0.19.1",
     "react-native-safari-view": "^2.1.0",
     "react-native-sensitive-info": "^5.2.3"
+  },
+  "devDependencies": {
+    "react-devtools": "^3.2.3"
   }
 }
