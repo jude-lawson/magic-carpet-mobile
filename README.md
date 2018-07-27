@@ -28,7 +28,7 @@ npm install
 Install the necesary cli tools for Expo:
 
 ```shell
-yarn global add exp
+yarn global add expo-cli
 ```
 
 [Install the Expo Client app on your mobile device](https://docs.expo.io/versions/v29.0.0/introduction/installation#mobile-client-expo-for-ios-and-android)
@@ -36,7 +36,7 @@ yarn global add exp
 Run expo packager (the necessary files will be installed the first time):
 
 ```shell
-exp start
+expo start
 ```
 
 Open the Expo Client on your phone and either select the app if it appears in the dashboard, scan the QR code in your terminal, or access the provided URL on your phone.
