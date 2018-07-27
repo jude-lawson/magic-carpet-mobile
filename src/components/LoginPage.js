@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Linking } from 'react-native';
-// import SafariView from 'react-native-safari-view';
 import { encode as btoa, decode as atob } from 'base-64';
-import { AuthSession, WebBrowser } from 'expo';
-import SInfo from 'react-native-sensitive-info'
+import { WebBrowser, SecureStore } from 'expo';
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
 
 import LyftLoginButton from './LyftLoginButton';
@@ -49,8 +47,10 @@ export default class LoginPage extends Component {
         this.setState(() => ({
           loggedIn: true
         }));
-        // SInfo.setItem('lyftToken', parsedResponse['access_token'], {});
-        // SInfo.setItem('lyftRefreshToken', parsedResponse['refresh_token'], {});
+        SecureStore.setItemAsync('lyftToken', parsedResponse['access_token']);
+        SecureStore.getItemAsync('lyftToken').then(response => console.log(response));
+        SecureStore.setItemAsync('lyftRefreshToken', parsedResponse['refresh_token']);
+        SecureStore.getItemAsync('lyftRefreshToken').then(response => console.log(response));
         WebBrowser.dismissBrowser();
       }
     })
