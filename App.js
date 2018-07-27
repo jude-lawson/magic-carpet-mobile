@@ -1,21 +1,26 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-export default class App extends React.Component {
+import LoginPage from './src/components/LoginPage'
+import Gradient from './src/components/Gradient'
+
+export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Start working on your app!</Text>
+        <Gradient />
+        <LoginPage />
       </View>
     );
   }
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
-  },
+    alignItems: 'center',
+    backgroundColor: '#030622'
+  }
 });
