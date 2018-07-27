@@ -8,13 +8,13 @@ _Please note that this app has the potential to actually call ride share service
 
 ## Installation & Setup
 
-Clone down the repo:
+1. Clone down the repo:
 
 ```shell
 git clone git@github.com:jude-lawson/magic-carpet-mobile.git MagicCarpet
 ```
 
-Install necessary dependencies:
+2. Install necessary dependencies:
 
 ```shell
 yarn install
@@ -25,21 +25,21 @@ yarn install
 ```shell
 npm install
 ```
-Install the necesary cli tools for Expo:
+3. Install the necesary cli tools for Expo:
 
 ```shell
 yarn global add expo-cli
 ```
 
-[Install the Expo Client app on your mobile device](https://docs.expo.io/versions/v29.0.0/introduction/installation#mobile-client-expo-for-ios-and-android)
+4. [Install the Expo Client app on your mobile device](https://docs.expo.io/versions/v29.0.0/introduction/installation#mobile-client-expo-for-ios-and-android)
 
-Run expo packager (the necessary files will be installed the first time):
+5. Run expo packager (the necessary files will be installed the first time):
 
 ```shell
 expo start
 ```
 
-Open the Expo Client on your phone and either select the app if it appears in the dashboard, scan the QR code in your terminal, or access the provided URL on your phone.
+6. Open the Expo Client on your phone and either select the app if it appears in the dashboard, scan the QR code in your terminal, or access the provided URL on your phone.
 
 For more information on running the app, please check out [the Expo documentation](https://docs.expo.io/versions/v29.0.0/workflow/up-and-running#open-the-app-on-your-phone-or).
 
