@@ -47,11 +47,23 @@ export default class SettingsPage extends Component {
 
   saveSettings() {
     SecureStore.setItemAsync('minRadius', this.state.selectedRadius[0].toString());
+    SecureStore.getItemAsync('minRadius').then(response => console.log(response));
+
     SecureStore.setItemAsync('maxRadius', this.state.selectedRadius[1].toString());
+    SecureStore.getItemAsync('maxRadius').then(response => console.log(response));
+
     SecureStore.setItemAsync('minPrice', this.state.selectedPrice[0].toString());
+    SecureStore.getItemAsync('minPrice').then(response => console.log(response));
+
     SecureStore.setItemAsync('maxPrice', this.state.selectedPrice[1].toString());
+    SecureStore.getItemAsync('maxPrice').then(response => console.log(response));
+
     SecureStore.setItemAsync('minRating', this.state.selectedRating[0].toString());
+    SecureStore.getItemAsync('minRating').then(response => console.log(response));
+
     SecureStore.setItemAsync('maxRating', this.state.selectedRating[1].toString());
+    SecureStore.getItemAsync('maxRating').then(response => console.log(response));
+    
     this.setState(() => ({
       goHome: true
     }));
