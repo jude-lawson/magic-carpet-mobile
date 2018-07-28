@@ -32,14 +32,12 @@ class ApiService{
   }
 
   static async setPayloadHeaders(extra=null){
-    let lyft_token = await ApiService.getFromKeychain("lyftToken")
+
+    ApiService.getFromKeychain("lyftToken")
+      .then((token)=>console.log(token))
+      // .then(()=>{ApiService.getFromKeychain("lyftRefreshToken")})
     let lyft_refresh_token = await ApiService.getFromKeychain("lyftRefreshToken")
     let id = await ApiService.getFromKeychain("id")
-
-    console.log("tokens from storage")
-    console.log(lyft_token)
-    console.log(lyft_refresh_token)
-    console.log(id)
 
     return {
       lyft_token: lyft_token,
@@ -50,6 +48,7 @@ class ApiService{
   }
   static goGet(url_extension, method, headers=null){
     ApiService.setPayloadHeaders().then((payload) => {
+
       fetch(`${host_url}/${api_version}/${url_extension}`, {
         method: method,
         headers: {
@@ -57,11 +56,9 @@ class ApiService{
         }
       })
       .then((data)=>{
-        console.log(data._bodyText)
         return data._bodyText
       })
       .then((response)=> {
-        console.log(response)
         ApiService.decodeJwt(response.json()["payload"])
       })
       .catch((error)=>console.log(error))
