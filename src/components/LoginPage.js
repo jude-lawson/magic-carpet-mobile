@@ -88,12 +88,15 @@ export default class LoginPage extends Component {
       if (auth_code === 'access_denied') {
         return
       } else {
+        console.log('keycahin tokens settting(5.5)')
+        console.log(parsedResponse['access_token'])
+        console.log(parsedResponse['refresh_token'])
 
         this.setTokensKeychain(parsedResponse['access_token'], parsedResponse['refresh_token'])
         .then(()=>{
           console.log('keycahin tokens set(6)')
           console.log(" ")
-          ApiService.createUser()
+          return ApiService.createUser()
         })
         .then((response)=>{
           console.log('USER CREATED (7)')

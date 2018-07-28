@@ -14,11 +14,11 @@ class ApiService{
     return decoded
   }
 
-  static getFromKeychain(key){
-    SecureStore.getItemAsync(key)
-      .then((response) => {return response})
-      .catch((error)=>console.log(error))
-  }
+  // static getFromKeychain(key){
+  //   SecureStore.getItemAsync(key)
+  //     .then((response) => {return response})
+  //     .catch((error)=>console.log(error))
+  // }
 
   static createAdventure(){
     return this.goGet('adventures', 'post')
@@ -28,27 +28,53 @@ class ApiService{
   }
 
   static async createUser(user_info = null){
-    return this.goGet('users', 'post', user_info)
+    return await this.goGet('users', 'post', user_info)
   }
 
-  static async setPayloadHeaders(extra=null){
-
-    ApiService.getFromKeychain("lyftToken")
-      .then((token)=>console.log(token))
-      // .then(()=>{ApiService.getFromKeychain("lyftRefreshToken")})
-    let lyft_refresh_token = await ApiService.getFromKeychain("lyftRefreshToken")
-    let id = await ApiService.getFromKeychain("id")
-
-    return {
-      lyft_token: lyft_token,
-      lyft_refresh_token: lyft_refresh_token,
-      id: id,
-      payload: extra
-    }
+  static setPayloadHeaders(extra=null){
+    let lyft_refresh_token;
+    let lyft_token;
+    let id;
+    let headers;
+    SecureStore.getItemAsync("lyftToken")
+    .then(
+      (response)=> {
+        lyft_token = response
+        return SecureStore.getItemAsync("lyftRefreshToken")
+        .then((response)=>{ 
+          lyft_refresh_token = response
+          return SecureStore.getItemAsync("id")
+          .then((response)=>{
+            id = response
+          })
+        })
+      })
+    .then(()=>{
+      console.log("get headers (6.1)")
+        console.log(lyft_token)
+        console.log(lyft_refresh_token)
+        console.log(id)
+        console.log(" ")
+      headers = {
+        lyft_token: lyft_token,
+        lyft_refresh_token: lyft_refresh_token,
+        payload: extra
+      }
+    })
+    .catch((error)=>console.log(error))
+    console.log("set payload headers Headers")
+    console.log(headers)
+    console.log(" ")
+    return headers
   }
+
   static goGet(url_extension, method, headers=null){
-    ApiService.setPayloadHeaders().then((payload) => {
-
+    console.log("6.25")
+    console.log(" ")
+    ApiService.setPayloadHeaders(headers)
+    .then((payload) => {
+      console.log('getting from keychain (6.5)')
+      console.log(payload)
       fetch(`${host_url}/${api_version}/${url_extension}`, {
         method: method,
         headers: {
@@ -59,7 +85,7 @@ class ApiService{
         return data._bodyText
       })
       .then((response)=> {
-        ApiService.decodeJwt(response.json()["payload"])
+        return ApiService.decodeJwt(response.json()["payload"])
       })
       .catch((error)=>console.log(error))
     })
