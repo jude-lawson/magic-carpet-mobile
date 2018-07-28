@@ -13,7 +13,7 @@ export default class LoginPage extends Component {
     super(props);
 
     this.state = {
-      loggedIn: false,
+      loggedIn: true,
       result: null
     }
 
@@ -45,7 +45,7 @@ export default class LoginPage extends Component {
         return
       } else {
         this.setState(() => ({
-          loggedIn: true
+          loggedIn: false
         }));
         SecureStore.setItemAsync('lyftToken', parsedResponse['access_token']);
         SecureStore.getItemAsync('lyftToken').then(response => console.log(response));
