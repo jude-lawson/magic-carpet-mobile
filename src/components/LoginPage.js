@@ -7,6 +7,8 @@ import { lyft_client_id, lyft_client_secret } from '../../config.js';
 import LyftLoginButton from './LyftLoginButton';
 import LandingPage from './LandingPage'
 import LyftService from '../services/LyftService'
+import ApiService from './ApiService'
+
 
 export default class LoginPage extends Component {
   constructor(props) {
@@ -22,7 +24,12 @@ export default class LoginPage extends Component {
 
   openURL = async (url) => {
     Linking.addEventListener( 'url', this.handleCallback );
-    let result = await WebBrowser.openBrowserAsync(url)
+    WebBrowser.openBrowserAsync(url)
+    .then((result)=> {
+      return result
+    })
+    .catch((error)=>console.log(error))
+
     // let result = await AuthSession.startAsync({
     //   authUrl: url
     // });
@@ -48,10 +55,32 @@ export default class LoginPage extends Component {
           loggedIn: true
         }));
         SecureStore.setItemAsync('lyftToken', parsedResponse['access_token']);
-        SecureStore.getItemAsync('lyftToken').then(response => console.log(response));
+        // SecureStore.getItemAsync('lyftToken').then(response => console.log(response));
         SecureStore.setItemAsync('lyftRefreshToken', parsedResponse['refresh_token']);
-        SecureStore.getItemAsync('lyftRefreshToken').then(response => console.log(response));
-        WebBrowser.dismissBrowser();
+        // SecureStore.getItemAsync('lyftRefreshToken').then(response => console.log(response));
+        ApiService.createUser()
+          .then((response)=>{
+            console.log("parsed response from us:")
+            console.log(response)
+            return response._textBody
+            if (response["user_id"]){
+              SecureStore.setItemAsync('id', response["id"])
+              .then(()=> {
+                this.setState(() => ({
+                  loggedIn: true
+                }))
+              })
+              .catch(
+                (error)=>console.log(error)
+              );
+            } else {
+              throw "error, server side"
+            }
+          })
+          .catch((error)=>{console.log(error)})
+          .then(()=>{
+            WebBrowser.dismissBrowser();
+          });
       }
     })
   }
@@ -61,6 +90,7 @@ export default class LoginPage extends Component {
     if (this.state.loggedIn) {
       page = <LandingPage />
     } else {
+      console.log(lyft_client_id)
       page = <LyftLoginButton clickEvent={() => this.openURL(`https://www.lyft.com/oauth/authorize_app?client_id=${lyft_client_id}&scope=public%20profile%20rides.read%20rides.request%20offline&state=%3Cstate_string%3E&response_type=code`)}/>
     }
 
