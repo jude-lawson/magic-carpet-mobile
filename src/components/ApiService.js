@@ -5,14 +5,16 @@ import { handshake, host_url, api_version } from '../../config'
 class ApiService{
 
   static encodeJwt(payload){
-    return JWT.encode(payload, handshake, {algorithm: 'none' })
+    // return JWT.encode(payload, handshake, {algorithm: 'HS384' })
+    return payload
   }
 
-  static decodeJwt(payload){
-    return JWT.decode(payload, handshake, {algorithm: 'none' })
+  static async decodeJwt(payload){
+    // return JWT.decode(payload, handshake, {algorithm: 'HS384' })
+    return payload
   }
 
-  // static getFromKeychain(key){
+  // static getFromKeychain(key){ 
   //   SecureStore.getItemAsync(key)
   //     .then((response) => {return response})
   //     .catch((error)=>console.log(error))

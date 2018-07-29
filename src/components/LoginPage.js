@@ -20,6 +20,7 @@ export default class LoginPage extends Component {
     }
 
     this.handleCallback = this.handleCallback.bind(this)
+    this.setUserId = this.setUserId.bind(this)
   };
 
   openURL = async (url) => {
@@ -33,15 +34,15 @@ export default class LoginPage extends Component {
       console.log("Open BrowsersResult (3)")
       console.log(result)
       console.log(" ")
-      return result
+      // return result
     })
-    .catch((error)=>console.log(error))
+  };
+    // .catc((error)=>console.log(error))
 
     // let result = await AuthSession.startAsync({
     //   authUrl: url
     // });
     // this.setState({ result });
-  };
 
   componentDidMount() {
     console.log('Component is mounted')
@@ -54,11 +55,13 @@ export default class LoginPage extends Component {
   }
 
 
-
-  setUserId(response){
-    return response._textBody
-    if (response["user_id"]){
-      SecureStore.setItemAsync('id', response["id"])
+  setUserId(received){
+    let response = JSON.parse(received)
+    if (response["id"]){
+      let id = response.id.toString()
+      console.log(id)
+      console.log(typeof id)
+      SecureStore.setItemAsync('id', id)
       .then(
         ()=> {this.setState(() => ({
           loggedIn: true
@@ -108,41 +111,30 @@ export default class LoginPage extends Component {
 
             ApiService.createUser(payload_data)
             .then((response)=>{
-              
-              console.log('USER CREATED (7)')
+
+              console.log('Response from rails')
               console.log(response.headers.map.authorization)
               console.log(" ")
+              console.log('parsed from rails')
+              console.log(ApiService.decodeJwt(response.headers.map.authorization))
+              console.log(' ')
 
-              let encoded_thing = ApiService.encodeJwt({id:"boo"})
-              console.log(encoded_thing)
-              console.log(ApiService.decodeJwt(encoded_thing))
-
-
-              ApiService.decodeJwt(response.headers.map.authorization).then(
-                (response) => {
-                console.log('parsed header response')
+              ApiService.decodeJwt(response.headers.map.authorization)
+              .then((response)=>{
                 console.log(response)
-                console.log(" ")
                 this.setUserId(response)
-                .then(()=>{
-                  this.setState(() => ({
-                    loggedIn: true
-                  }))
-                  console.log('state set to logged in (8)')
-                  console.log(" ")
-                })
               })
               .catch((error)=>console.log(error))
-            })
+              })
           })
         })
+        .then(()=>{
+                  console.log('browser dismissed (9)')
+                  console.log(" ")
+                  WebBrowser.dismissBrowser();
+                })
         .catch(
           (error)=>{console.log(error)
-        })
-        .then(()=>{
-          console.log('browser dismissed (9)')
-          console.log(" ")
-          WebBrowser.dismissBrowser();
         })
       }
     })
