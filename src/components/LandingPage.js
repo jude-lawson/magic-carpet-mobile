@@ -17,7 +17,12 @@ export default class LandingPage extends Component {
       loggedIn: true,
       rideCalled: false,
       openSettings: false,
-      destination: 'Default'
+      destination: 'Default',
+      settings: {
+        radius: [2,4],
+        price: [2,3],
+        rating: [2,4],
+      }
     }
 
     this.createAdventure = this.createAdventure.bind(this)
@@ -31,9 +36,9 @@ export default class LandingPage extends Component {
       preferences: {
         search_settings: {
           "open_now": true,
-          "radius": 1000,
-          "latitude": 39.7293,
-          "longitude": -104.9844,
+          "radius": [1,1],
+          "latitude": this.props.location.latitude,
+          "longitude": this.props.location.longitude,
           "price": "1,2,3",
           "term": "restaurants"
         },

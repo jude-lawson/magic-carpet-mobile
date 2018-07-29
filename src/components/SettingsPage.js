@@ -12,9 +12,9 @@ export default class SettingsPage extends Component {
     super(props);
 
     this.state = {
-      selectedRadius: [2,4],
-      selectedPrice: [2,3],
-      selectedRating: [2,4],
+      defaultRadius: [2,4],
+      defaultPrice: [2,3],
+      defaultRating: [2,4],
       goHome: false
     }
 
@@ -26,9 +26,9 @@ export default class SettingsPage extends Component {
     this.savePrice();
     this.saveRating();
 
-    console.log(`Radius: ${this.state.selectedRadius}`)
-    console.log(`Price: ${this.state.selectedPrice}`)
-    console.log(`Rating: ${this.state.selectedRating}`)
+    console.log(`Radius: ${this.state.defaultRadius}`)
+    console.log(`Price: ${this.state.defaultPrice}`)
+    console.log(`Rating: ${this.state.defaultRating}`)
 
     this.setState(() => ({
       goHome: true
@@ -37,19 +37,19 @@ export default class SettingsPage extends Component {
 
   saveRadius = (data) => {
     this.setState(() => ({
-      selectedRadius: data
+      defaultRadius: data
     }));
   }
 
   savePrice = (data) => {
     this.setState(() => ({
-      selectedPrice: data
+      defaultPrice: data
     }));
   }
 
   saveRating = (data) => {
     this.setState(() => ({
-      selectedRating: data
+      defaultRating: data
     }));
   }
 
@@ -65,10 +65,10 @@ export default class SettingsPage extends Component {
               Settings
             </Text>
             <Text style={styles.setting}>
-              Radius:  {this.state.selectedRadius[0]} - {this.state.selectedRadius[1]} Miles
+              Radius:  {this.state.defaultRadius[0]} - {this.state.defaultRadius[1]} Miles
             </Text>
             <MultiSlider style={styles.slider}
-              values={this.state.selectedRadius}
+              values={this.state.defaultRadius}
               onValuesChange={this.saveRadius}
               onValuesChangeFinish={this.saveRadius}
               min={1}
@@ -78,10 +78,10 @@ export default class SettingsPage extends Component {
               snapped
             />
             <Text style={styles.setting}>
-                Price:  { '$'.repeat(this.state.selectedPrice[0]) } - { '$'.repeat(this.state.selectedPrice[1]) }
+                Price:  { '$'.repeat(this.state.defaultPrice[0]) } - { '$'.repeat(this.state.defaultPrice[1]) }
             </Text>
             <MultiSlider style={styles.slider}
-              values={this.state.selectedPrice}
+              values={this.state.defaultPrice}
               onValuesChange={this.savePrice}
               onValuesChangeFinish={this.savePrice}
               min={1}
@@ -91,10 +91,10 @@ export default class SettingsPage extends Component {
               snapped
             />
             <Text style={styles.setting}>
-              Rating:  {this.state.selectedRating[0]} - {this.state.selectedRating[1]} Stars
+              Rating:  {this.state.defaultRating[0]} - {this.state.defaultRating[1]} Stars
             </Text>
             <MultiSlider style={styles.slider}
-              values={this.state.selectedRating}
+              values={this.state.defaultRating}
               onValuesChange={this.saveRating}
               onValuesChangeFinish={this.saveRating}
               min={1}
