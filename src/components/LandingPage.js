@@ -17,7 +17,7 @@ export default class LandingPage extends Component {
       loggedIn: true,
       rideCalled: false,
       openSettings: false,
-      content: 'Default'
+      destination: 'Default'
     }
 
     this.createAdventure = this.createAdventure.bind(this)
@@ -47,9 +47,7 @@ export default class LandingPage extends Component {
     ApiService.goGet('adventures', 'post', { body: payload })
       .then((response) => response.json())
       .then((parsedResponse) => {
-        this.setState(() => ({
-          content: parsedResponse.destination
-        }))
+        this.setState({ destination: parsedResponse.destination} )
       })
       .catch((error) => {
         console.error(error);
@@ -77,7 +75,7 @@ export default class LandingPage extends Component {
     let pageContent;
  
     if (this.state.rideCalled) {
-      pageContent = <EstimatePage price={this.state.content.price} data={this.state.content} />
+      pageContent = <EstimatePage price={this.state.destination.price} data={this.state.destination} />
     } else if (this.state.openSettings) {
       pageContent = <SettingsPage />
     } else if (this.state.loggedIn) {
@@ -86,7 +84,7 @@ export default class LandingPage extends Component {
           <HomeButton handleHomeClick={this.handleHomeClick} />
           <SettingsIcon renderSettings={this.renderSettingsPage} />
           <MagicCarpetButton clickEvent={this.createAdventure} />
-          {console.log(this.state.content)}
+          {console.log(this.state.destination)}
         </React.Fragment>
       );
     }
