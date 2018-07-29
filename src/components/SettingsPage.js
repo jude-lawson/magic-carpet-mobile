@@ -12,9 +12,9 @@ export default class SettingsPage extends Component {
     super(props);
 
     this.state = {
-      defaultRadius: [2,4],
-      defaultPrice: [2,3],
-      defaultRating: [2,4],
+      currentRadius: this.props.settings.radius,
+      currentPrice: this.props.settings.price,
+      currentRating: this.props.settings.rating,
       goHome: false
     }
 
@@ -22,14 +22,6 @@ export default class SettingsPage extends Component {
   }
 
   handleHomeClick() {
-    this.saveRadius();
-    this.savePrice();
-    this.saveRating();
-
-    console.log(`Radius: ${this.state.defaultRadius}`)
-    console.log(`Price: ${this.state.defaultPrice}`)
-    console.log(`Rating: ${this.state.defaultRating}`)
-
     this.setState(() => ({
       goHome: true
     }));
@@ -37,19 +29,19 @@ export default class SettingsPage extends Component {
 
   saveRadius = (data) => {
     this.setState(() => ({
-      defaultRadius: data
+      currentRadius: data
     }));
   }
 
   savePrice = (data) => {
     this.setState(() => ({
-      defaultPrice: data
+      currentPrice: data
     }));
   }
 
   saveRating = (data) => {
     this.setState(() => ({
-      defaultRating: data
+      currentRating: data
     }));
   }
 
@@ -65,10 +57,10 @@ export default class SettingsPage extends Component {
               Settings
             </Text>
             <Text style={styles.setting}>
-              Radius:  {this.state.defaultRadius[0]} - {this.state.defaultRadius[1]} Miles
+              Radius:  {this.state.currentRadius[0]} - {this.state.currentRadius[1]} Miles
             </Text>
             <MultiSlider style={styles.slider}
-              values={this.state.defaultRadius}
+              values={this.state.currentRadius}
               onValuesChange={this.saveRadius}
               onValuesChangeFinish={this.saveRadius}
               min={1}
@@ -78,10 +70,10 @@ export default class SettingsPage extends Component {
               snapped
             />
             <Text style={styles.setting}>
-                Price:  { '$'.repeat(this.state.defaultPrice[0]) } - { '$'.repeat(this.state.defaultPrice[1]) }
+                Price:  { '$'.repeat(this.state.currentPrice[0]) } - { '$'.repeat(this.state.currentPrice[1]) }
             </Text>
             <MultiSlider style={styles.slider}
-              values={this.state.defaultPrice}
+              values={this.state.currentPrice}
               onValuesChange={this.savePrice}
               onValuesChangeFinish={this.savePrice}
               min={1}
@@ -91,10 +83,10 @@ export default class SettingsPage extends Component {
               snapped
             />
             <Text style={styles.setting}>
-              Rating:  {this.state.defaultRating[0]} - {this.state.defaultRating[1]} Stars
+              Rating:  {this.state.currentRating[0]} - {this.state.currentRating[1]} Stars
             </Text>
             <MultiSlider style={styles.slider}
-              values={this.state.defaultRating}
+              values={this.state.currentRating}
               onValuesChange={this.saveRating}
               onValuesChangeFinish={this.saveRating}
               min={1}
@@ -103,12 +95,16 @@ export default class SettingsPage extends Component {
               allowOverlap
               snapped
             />
-            <SettingSaveButton clickEvent={() => this.handleHomeClick()}/>
+            <SettingSaveButton clickEvent={() => {
+                let updated_settings = { radius: this.state.currentRadius, price: this.state.currentPrice, rating: this.state.currentRating }
+                this.props.handleSave(updated_settings)
+                this.handleHomeClick()
+              }}/>
           </Card>
         </React.Fragment>
       )
     } else if (this.state.goHome) {
-      content = <LandingPage />
+      content = <LandingPage settings={{ radius: this.state.currentRadius, price: this.state.currentPrice, rating: this.state.currentRating }} />
     }
 
     return (

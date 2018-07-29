@@ -12,6 +12,7 @@ import { lyft_client_id } from '../../config.js'
 
 export default class LandingPage extends Component {
   constructor(props) {
+
     super(props);
     this.state = {
       loggedIn: true,
@@ -19,9 +20,9 @@ export default class LandingPage extends Component {
       openSettings: false,
       destination: 'Default',
       settings: {
-        radius: [2,4],
-        price: [2,3],
-        rating: [2,4],
+        radius: this.props.settings.radius,
+        price: this.props.settings.price,
+        rating: this.props.settings.rating,
       }
     }
 
@@ -29,6 +30,7 @@ export default class LandingPage extends Component {
     this.handleHomeClick = this.handleHomeClick.bind(this)
     this.renderSettingsPage = this.renderSettingsPage.bind(this)
     this.openLyft = this.openLyft.bind(this)
+    this.updateSettings = this.updateSettings.bind(this)
   }
 
   createAdventure() {
@@ -59,6 +61,18 @@ export default class LandingPage extends Component {
       })
   }
 
+  updateSettings(new_settings) {
+    console.log('Saving settings...')
+    console.log(new_settings)
+    this.setState({
+      settings: {
+        radius: new_settings.radius,
+        price: new_settings.price,
+        rating: new_settings.rating
+      }
+    })
+  }
+
   openLyft() {
     // WebBrowser.openBrowserAsync(`https://lyft.com/ride?id=lyft&pickup[latitude]=39.9721648&pickup[longitude]=-105.08742&partner=${lyft_client_id}&destination[latitude]=39.9877087&destination[longitude]=-105.0858611`)
     console.log('Lyft is open')
@@ -82,7 +96,7 @@ export default class LandingPage extends Component {
     if (this.state.rideCalled) {
       pageContent = <EstimatePage price={this.state.destination.price} data={this.state.destination} />
     } else if (this.state.openSettings) {
-      pageContent = <SettingsPage />
+      pageContent = <SettingsPage settings={this.state.settings} handleSave={(updatedSettings) => { this.updateSettings(updatedSettings) }} />
     } else if (this.state.loggedIn) {
       pageContent = (
         <React.Fragment>

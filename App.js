@@ -52,7 +52,9 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <Gradient />
-        <LandingPage location={{ latitude: this.state.latitude, longitude: this.state.longitude }}/>
+        <LandingPage 
+          location={{ latitude: this.state.latitude, longitude: this.state.longitude }}
+          settings={{ radius: [2,4], price: [2,3], rating: [2,4] }} />
       </View>
     );
   }
