@@ -11,7 +11,7 @@ export default class EstimatePage extends Component {
     super(props);
 
     this.state = {
-      confirmed: false
+      confirmed: null
     }
 
     this.handleConfirmation = this.handleConfirmation.bind(this)
@@ -65,7 +65,7 @@ export default class EstimatePage extends Component {
         </React.Fragment>
       )
     } else if (this.state.confirmed === 'confirmed') {
-      content = <ConfirmationPage data={this.props.data} />
+      content = <RidePage data={this.props.data} />
     } else if (this.state.confirmed === 'declined') {
       content = <LandingPage />
     }
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     top: 350
   },
   cardStyle: {
-    height: 200, 
+    height: 200,
     width: 250
   },
   textStyle: {
