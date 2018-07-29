@@ -39,12 +39,13 @@ class ApiService{
 
   // 
 
-  static async goGet(url_extension, method, headers=null){
+  static async goGet(url_extension, method, options_obj={}){
 
     return await fetch(`${host_url}/${api_version}/${url_extension}`, {
       method: method,
+      body: options_obj.body,
       headers: {
-        payload: headers,
+        payload: options_obj.headers,
       }
     })
     

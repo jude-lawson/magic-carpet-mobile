@@ -27,25 +27,25 @@ export default class LandingPage extends Component {
   }
 
   createAdventure() {
-    fetch('http://localhost:3000/api/v1/adventures', {
-      method: 'POST',
-      body: JSON.stringify({
-        preferences: {
-          search_settings: {
-            "open_now": true,
-            "radius": 1000,
-            "latitude": 39.7293,
-            "longitude": -104.9844,
-            "price": "1,2,3",
-            "term": "restaurants"
-          },
-          restrictions: {
-            categories: [],
-            min_radius: 1000
-          }
+    let payload = JSON.stringify({
+      preferences: {
+        search_settings: {
+          "open_now": true,
+          "radius": 1000,
+          "latitude": 39.7293,
+          "longitude": -104.9844,
+          "price": "1,2,3",
+          "term": "restaurants"
+        },
+        restrictions: {
+          categories: [],
+          min_radius: 1000
         }
-      })
-    }).then((response) => response.json())
+      }
+    });
+
+    ApiService.goGet('adventures', 'post', { body: payload })
+      .then((response) => response.json())
       .then((parsedResponse) => {
         this.setState(() => ({
           content: parsedResponse.destination
