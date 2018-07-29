@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, Card } from 'react-native';
 import { WebBrowser } from 'expo';
 
 import SettingsIcon from './SettingsIcon';
@@ -7,7 +7,7 @@ import MagicCarpetButton from './MagicCarpetButton';
 import EstimatePage from './EstimatePage';
 import HomeButton from './HomeButton';
 import SettingsPage from './SettingsPage';
-import UserAvatar from './UserAvatar';
+import ApiService from './ApiService';
 import { lyft_client_id } from '../../config.js'
 
 export default class LandingPage extends Component {
@@ -16,7 +16,8 @@ export default class LandingPage extends Component {
     this.state = {
       loggedIn: true,
       rideCalled: false,
-      openSettings: false
+      openSettings: false,
+      content: 'Default'
     }
 
     this.createAdventure = this.createAdventure.bind(this)
@@ -26,30 +27,33 @@ export default class LandingPage extends Component {
   }
 
   createAdventure() {
-    // fetch('http://localhost:3000/api/v1/adventures', {
-    //   method: 'POST',
-    //   body: JSON.stringify({
-    //     preferences: {
-    //     "open_now": true,
-    //     "radius": 1000,
-    //     "latitude": 39.7293,
-    //     "longitude": -104.9844,
-    //     "price": "1,2,3",
-    //     "term": "restaurants"
-    //     }
-    //   })
-    // })
-    //  .then((response) => response.json())
-    //  .then((parsedResponse) => {
-    //    this.setState(() => ({
-    //      rideCalled: true,
-    //      content: parsedResponse.destination
-    //    }))
-    //  })
-    //  .catch((error) => {
-    //    console.error(error);
-    //  })
-    return
+    fetch('http://localhost:3000/api/v1/adventures', {
+      method: 'POST',
+      body: JSON.stringify({
+        preferences: {
+          search_settings: {
+            "open_now": true,
+            "radius": 1000,
+            "latitude": 39.7293,
+            "longitude": -104.9844,
+            "price": "1,2,3",
+            "term": "restaurants"
+          },
+          restrictions: {
+            categories: [],
+            min_radius: 1000
+          }
+        }
+      })
+    }).then((response) => response.json())
+      .then((parsedResponse) => {
+        this.setState(() => ({
+          content: parsedResponse.destination
+        }))
+      })
+      .catch((error) => {
+        console.error(error);
+      })
   }
 
   openLyft() {
@@ -80,9 +84,9 @@ export default class LandingPage extends Component {
       pageContent = (
         <React.Fragment>
           <HomeButton handleHomeClick={this.handleHomeClick} />
-          <UserAvatar />
           <SettingsIcon renderSettings={this.renderSettingsPage} />
-          <MagicCarpetButton clickEvent={this.openLyft} />
+          <MagicCarpetButton clickEvent={this.createAdventure} />
+          {console.log(this.state.content)}
         </React.Fragment>
       );
     }

@@ -44,7 +44,7 @@ class ApiService{
     return await fetch(`${host_url}/${api_version}/${url_extension}`, {
       method: method,
       headers: {
-        payload: ApiService.encodeJwt(JSON.stringify(headers)),
+        payload: headers,
       }
     })
     
