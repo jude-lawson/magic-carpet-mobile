@@ -23,7 +23,6 @@ export default class LoginPage extends Component {
   };
 
   openURL = async (url) => {
-
     console.log("Open Url (2)")
     console.log(Expo.Constants.linkingUri)
     console.log(" ")
@@ -50,12 +49,13 @@ export default class LoginPage extends Component {
   }
 
   async setTokensKeychain(token, refresh_token) {
-    await SecureStore.setItemAsync('lyftToken', token)
-    await SecureStore.setItemAsync('lyftRefreshToken', refresh_token)
+    await SecureStore.setItemAsync('lyft_token', token)
+    await SecureStore.setItemAsync('lyft_refresh_token', refresh_token)
   }
 
-  setUserId(response){
 
+
+  setUserId(response){
     return response._textBody
     if (response["user_id"]){
       SecureStore.setItemAsync('id', response["id"])
@@ -96,22 +96,45 @@ export default class LoginPage extends Component {
         .then(()=>{
           console.log('keycahin tokens set(6)')
           console.log(" ")
-          return ApiService.createUser()
-        })
-        .then((response)=>{
-          console.log('USER CREATED (7)')
-          console.log(response)
-          console.log(" ")
 
-          this.setUserId(response)
-          
-        })
-        .then(()=>{
-            this.setState(() => ({
-              loggedIn: true
-            }))
-            console.log('state set to logged in (8)')
+
+          ApiService.getInfo()
+            .then((payload_data)=>{
+            console.log(JSON.stringify(payload_data))
+            console.log(`retrived token ${payload_data['refresh_token']} from keychain`)
             console.log(" ")
+
+            // let encoded_payload = ApiService.encodeJwt(payload_data)
+
+            ApiService.createUser(payload_data)
+            .then((response)=>{
+              
+              console.log('USER CREATED (7)')
+              console.log(response.headers.map.authorization)
+              console.log(" ")
+
+              let encoded_thing = ApiService.encodeJwt({id:"boo"})
+              console.log(encoded_thing)
+              console.log(ApiService.decodeJwt(encoded_thing))
+
+
+              ApiService.decodeJwt(response.headers.map.authorization).then(
+                (response) => {
+                console.log('parsed header response')
+                console.log(response)
+                console.log(" ")
+                this.setUserId(response)
+                .then(()=>{
+                  this.setState(() => ({
+                    loggedIn: true
+                  }))
+                  console.log('state set to logged in (8)')
+                  console.log(" ")
+                })
+              })
+              .catch((error)=>console.log(error))
+            })
+          })
         })
         .catch(
           (error)=>{console.log(error)

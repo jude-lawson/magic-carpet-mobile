@@ -5,13 +5,11 @@ import { handshake, host_url, api_version } from '../../config'
 class ApiService{
 
   static encodeJwt(payload){
-    let encoded = JWT.encode(payload, handshake, {algorithm: 'HS256' })
-    return encoded
+    return JWT.encode(payload, handshake, {algorithm: 'none' })
   }
 
   static decodeJwt(payload){
-    let decoded = JWT.decode(payload, handshake, {algorithm: 'HS256' })
-    return decoded
+    return JWT.decode(payload, handshake, {algorithm: 'none' })
   }
 
   // static getFromKeychain(key){
@@ -27,69 +25,80 @@ class ApiService{
     return this.goGet('rides', 'post', adventureInfo)
   }
 
+  static async getInfo(){
+    const token = await SecureStore.getItemAsync('lyft_token') 
+    const refresh_token = await SecureStore.getItemAsync('lyft_refresh_token')
+    return { token: token, refresh_token: refresh_token}
+  }
+
   static async createUser(user_info = null){
     return await this.goGet('users', 'post', user_info)
   }
 
-  static setPayloadHeaders(extra=null){
-    let lyft_refresh_token;
-    let lyft_token;
-    let id;
-    let headers;
-    SecureStore.getItemAsync("lyftToken")
-    .then(
-      (response)=> {
-        lyft_token = response
-        return SecureStore.getItemAsync("lyftRefreshToken")
-        .then((response)=>{ 
-          lyft_refresh_token = response
-          return SecureStore.getItemAsync("id")
-          .then((response)=>{
-            id = response
-          })
-        })
-      })
-    .then(()=>{
-      console.log("get headers (6.1)")
-        console.log(lyft_token)
-        console.log(lyft_refresh_token)
-        console.log(id)
-        console.log(" ")
-      headers = {
-        lyft_token: lyft_token,
-        lyft_refresh_token: lyft_refresh_token,
-        payload: extra
+  // 
+
+  static async goGet(url_extension, method, headers=null){
+    console.log("6.25") 
+    console.log(" ")
+
+    return await fetch(`${host_url}/${api_version}/${url_extension}`, {
+      method: method,
+      headers: {
+        payload: ApiService.encodeJwt(JSON.stringify(headers)),
       }
     })
-    .catch((error)=>console.log(error))
-    console.log("set payload headers Headers")
-    console.log(headers)
-    console.log(" ")
-    return headers
-  }
-
-  static goGet(url_extension, method, headers=null){
-    console.log("6.25")
-    console.log(" ")
-    ApiService.setPayloadHeaders(headers)
-    .then((payload) => {
-      console.log('getting from keychain (6.5)')
-      console.log(payload)
-      fetch(`${host_url}/${api_version}/${url_extension}`, {
-        method: method,
-        headers: {
-          payload: ApiService.encodeJwt(payload),
-        }
-      })
-      .then((data)=>{
-        return data._bodyText
-      })
-      .then((response)=> {
-        return ApiService.decodeJwt(response.json()["payload"])
-      })
-      .catch((error)=>console.log(error))
-    })
-    .catch((error)=>console.log(error));
+    
   }
 }
 export default ApiService
+
+// static setPayloadHeaders(extra=null){
+  //   let lyft_refresh_token;
+  //   let lyft_token;
+  //   let id;
+  //   let headers;
+  //   SecureStore.getItemAsync("lyftToken")
+  //   .then(
+  //     (response)=> {
+  //       lyft_token = response
+  //       return SecureStore.getItemAsync("lyftRefreshToken")
+  //       .then((response)=>{ 
+  //         lyft_refresh_token = response
+  //         return SecureStore.getItemAsync("id")
+  //         .then((response)=>{
+  //           id = response
+  //         })
+  //       })
+  //     })
+  //   .then(()=>{
+  //     console.log("get headers (6.1)")
+  //       console.log(lyft_token)
+  //       console.log(lyft_refresh_token)
+  //       console.log(id)
+  //       console.log(" ")
+  //     headers = {
+  //       lyft_token: lyft_token,
+  //       lyft_refresh_token: lyft_refresh_token,
+  //       payload: extra
+  //     }
+  //     return headers
+  //   })
+  //   .catch((error)=>console.log(error))
+  // }
+
+
+
+  // ApiService.setPayloadHeaders(headers)
+  // .then((payload) => {
+  //   console.log('getting from keychain (6.5)')
+  //   console.log(payload)
+    
+  //   .then((data)=>{
+  //     return data._bodyText
+  //   })
+  //   .then((response)=> {
+  //     return ApiService.decodeJwt(response.json()["payload"])
+  //   })
+  //   .catch((error)=>console.log(error))
+  // })
+  // .catch((error)=>console.log(error));
