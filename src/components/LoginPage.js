@@ -15,7 +15,7 @@ export default class LoginPage extends Component {
     super(props);
 
     this.state = {
-      loggedIn: false,
+      loggedIn: true,
       result: null
     }
 
