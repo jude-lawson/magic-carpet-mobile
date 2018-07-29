@@ -31,10 +31,6 @@ export default class LoginPage extends Component {
     Linking.addEventListener( 'url', this.handleCallback );
     WebBrowser.openBrowserAsync(url)
     .then((result)=> {
-      console.log("Open BrowsersResult (3)")
-      console.log(result)
-      console.log(" ")
-      // return result
     })
   };
     // .catc((error)=>console.log(error))
@@ -59,8 +55,6 @@ export default class LoginPage extends Component {
     let response = JSON.parse(received)
     if (response["id"]){
       let id = response.id.toString()
-      console.log(id)
-      console.log(typeof id)
       SecureStore.setItemAsync('id', id)
       .then(
         ()=> {this.setState(() => ({
@@ -76,49 +70,26 @@ export default class LoginPage extends Component {
   }
 
   handleCallback(event) {
-    console.log('handling callback (4)')
-    console.log(" ")
+
     const auth_code = event.url.split('?')[1].split('&')[0].split('=')[1]
     const enc_client_auth = btoa(`${lyft_client_id}:${lyft_client_secret}`)
 
     LyftService.authorize(auth_code, enc_client_auth)
     .then((response) => response.json())
     .then((parsedResponse) => {
-      console.log('parsed lyft response (5)')
-      console.log(parsedResponse)
-      console.log(" ")
-
       if (auth_code === 'access_denied') {
         return
       } else {
-        console.log('keycahin tokens settting(5.5)')
-        console.log(parsedResponse['access_token'])
-        console.log(parsedResponse['refresh_token'])
-
+ 
         this.setTokensKeychain(parsedResponse['access_token'], parsedResponse['refresh_token'])
         .then(()=>{
-          console.log('keycahin tokens set(6)')
-          console.log(" ")
-
 
           ApiService.getInfo()
             .then((payload_data)=>{
-            console.log(JSON.stringify(payload_data))
-            console.log(`retrived token ${payload_data['refresh_token']} from keychain`)
-            console.log(" ")
-
             // let encoded_payload = ApiService.encodeJwt(payload_data)
 
             ApiService.createUser(payload_data)
             .then((response)=>{
-
-              console.log('Response from rails')
-              console.log(response.headers.map.authorization)
-              console.log(" ")
-              console.log('parsed from rails')
-              console.log(ApiService.decodeJwt(response.headers.map.authorization))
-              console.log(' ')
-
               ApiService.decodeJwt(response.headers.map.authorization)
               .then((response)=>{
                 console.log(response)
@@ -129,10 +100,10 @@ export default class LoginPage extends Component {
           })
         })
         .then(()=>{
-                  console.log('browser dismissed (9)')
-                  console.log(" ")
-                  WebBrowser.dismissBrowser();
-                })
+          WebBrowser.dismissBrowser();
+          console.log('browser dismissed (9)')
+          console.log(" ")
+        })
         .catch(
           (error)=>{console.log(error)
         })

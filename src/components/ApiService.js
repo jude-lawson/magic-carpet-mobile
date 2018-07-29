@@ -40,8 +40,6 @@ class ApiService{
   // 
 
   static async goGet(url_extension, method, headers=null){
-    console.log("6.25") 
-    console.log(" ")
 
     return await fetch(`${host_url}/${api_version}/${url_extension}`, {
       method: method,
