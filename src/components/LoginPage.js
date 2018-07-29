@@ -7,6 +7,8 @@ import { lyft_client_id, lyft_client_secret } from '../../config.js';
 import LyftLoginButton from './LyftLoginButton';
 import LandingPage from './LandingPage'
 import LyftService from '../services/LyftService'
+import ApiService from './ApiService'
+
 
 export default class LoginPage extends Component {
   constructor(props) {
@@ -18,23 +20,57 @@ export default class LoginPage extends Component {
     }
 
     this.handleCallback = this.handleCallback.bind(this)
+    this.setUserId = this.setUserId.bind(this)
   };
 
   openURL = async (url) => {
+    console.log("Open Url (2)")
+    console.log(Expo.Constants.linkingUri)
+    console.log(" ")
+
     Linking.addEventListener( 'url', this.handleCallback );
-    let result = await WebBrowser.openBrowserAsync(url)
+    WebBrowser.openBrowserAsync(url)
+    .then((result)=> {
+    })
+  };
+    // .catc((error)=>console.log(error))
+
     // let result = await AuthSession.startAsync({
     //   authUrl: url
     // });
     // this.setState({ result });
-  };
 
   componentDidMount() {
     console.log('Component is mounted')
+    console.log(" ")
+  }
+
+  async setTokensKeychain(token, refresh_token) {
+    await SecureStore.setItemAsync('lyft_token', token)
+    await SecureStore.setItemAsync('lyft_refresh_token', refresh_token)
+  }
+
+
+  setUserId(received){
+    let response = JSON.parse(received)
+    if (response["id"]){
+      let id = response.id.toString()
+      SecureStore.setItemAsync('id', id)
+      .then(
+        ()=> {this.setState(() => ({
+          loggedIn: true
+        }))
+      })
+      .catch(
+        (error)=>console.log(error)
+      );
+    } else {
+      throw "error, server side"
+    }
   }
 
   handleCallback(event) {
-    console.log('In callback handler')
+
     const auth_code = event.url.split('?')[1].split('&')[0].split('=')[1]
     const enc_client_auth = btoa(`${lyft_client_id}:${lyft_client_secret}`)
 
@@ -44,14 +80,33 @@ export default class LoginPage extends Component {
       if (auth_code === 'access_denied') {
         return
       } else {
-        this.setState(() => ({
-          loggedIn: false
-        }));
-        SecureStore.setItemAsync('lyftToken', parsedResponse['access_token']);
-        SecureStore.getItemAsync('lyftToken').then(response => console.log(response));
-        SecureStore.setItemAsync('lyftRefreshToken', parsedResponse['refresh_token']);
-        SecureStore.getItemAsync('lyftRefreshToken').then(response => console.log(response));
-        WebBrowser.dismissBrowser();
+ 
+        this.setTokensKeychain(parsedResponse['access_token'], parsedResponse['refresh_token'])
+        .then(()=>{
+
+          ApiService.getInfo()
+            .then((payload_data)=>{
+            // let encoded_payload = ApiService.encodeJwt(payload_data)
+
+            ApiService.createUser(payload_data)
+            .then((response)=>{
+              ApiService.decodeJwt(response.headers.map.authorization)
+              .then((response)=>{
+                console.log(response)
+                this.setUserId(response)
+              })
+              .catch((error)=>console.log(error))
+              })
+          })
+        })
+        .then(()=>{
+          WebBrowser.dismissBrowser();
+          console.log('browser dismissed (9)')
+          console.log(" ")
+        })
+        .catch(
+          (error)=>{console.log(error)
+        })
       }
     })
   }
@@ -61,6 +116,8 @@ export default class LoginPage extends Component {
     if (this.state.loggedIn) {
       page = <LandingPage />
     } else {
+      console.log("Login Button (1)")
+      console.log(" ")
       page = <LyftLoginButton clickEvent={() => this.openURL(`https://www.lyft.com/oauth/authorize_app?client_id=${lyft_client_id}&scope=public%20profile%20rides.read%20rides.request%20offline&state=%3Cstate_string%3E&response_type=code`)}/>
     }
 

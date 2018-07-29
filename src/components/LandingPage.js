@@ -39,7 +39,6 @@ export default class LandingPage extends Component {
     })
      .then((response) => response.json())
      .then((parsedResponse) => {
-       console.log(parsedResponse.destination)
        this.setState(() => ({
          rideCalled: true,
          content: parsedResponse.destination

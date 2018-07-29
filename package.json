@@ -13,6 +13,7 @@
     "@ptomasroos/react-native-multi-slider": "^1.0.0",
     "base-64": "^0.1.0",
     "expo": "^29.0.0",
+    "expo-jwt": "^1.0.2",
     "react": "16.3.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-29.0.0.tar.gz",
     "react-native-elements": "^0.19.1",
