@@ -22,6 +22,14 @@ export default class SettingsPage extends Component {
   }
 
   handleHomeClick() {
+    this.saveRadius();
+    this.savePrice();
+    this.saveRating();
+
+    console.log(`Radius: ${this.state.selectedRadius}`)
+    console.log(`Price: ${this.state.selectedPrice}`)
+    console.log(`Rating: ${this.state.selectedRating}`)
+
     this.setState(() => ({
       goHome: true
     }));

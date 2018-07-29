@@ -14,7 +14,6 @@ export default class LandingPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: 'This is the current body',
       loggedIn: true,
       rideCalled: false,
       openSettings: false
@@ -54,7 +53,8 @@ export default class LandingPage extends Component {
   }
 
   openLyft() {
-    WebBrowser.openBrowserAsync(`https://lyft.com/ride?id=lyft&pickup[latitude]=39.9721648&pickup[longitude]=-105.08742&partner=${lyft_client_id}&destination[latitude]=39.9877087&destination[longitude]=-105.0858611`)
+    // WebBrowser.openBrowserAsync(`https://lyft.com/ride?id=lyft&pickup[latitude]=39.9721648&pickup[longitude]=-105.08742&partner=${lyft_client_id}&destination[latitude]=39.9877087&destination[longitude]=-105.0858611`)
+    console.log('Lyft is open')
   }
 
   handleHomeClick() {
@@ -71,17 +71,7 @@ export default class LandingPage extends Component {
 
   render() {
     let pageContent;
-    // if (!this.state.rideCalled && !this.state.openSettings) {
-    //   pageContent = (
-    //     <React.Fragment>
-    //       {/* <HomeButton handleHomeClick={this.handleHomeClick} />
-    //       <UserAvatar />
-    //       <SettingsIcon renderSettings={this.renderSettingsPage} />
-    //       <MagicCarpetButton clickEvent={this.createAdventure} /> */}
-    //       <Text>Nope.</Text>
-    //     </React.Fragment>
-    //   );
-    // } else 
+ 
     if (this.state.rideCalled) {
       pageContent = <EstimatePage price={this.state.content.price} data={this.state.content} />
     } else if (this.state.openSettings) {
