@@ -11,38 +11,80 @@ import SettingSaveButton from './SettingSaveButton'
 export default class SettingsPage extends Component {
   constructor(props) {
     super(props);
-
+    console.log("settings page")
+    console.log(this.props.settings)
     this.state = {
-      selectedRadius: [2,4],
-      selectedPrice: [2,3],
-      selectedRating: [2,4],
-      goHome: false
+      minRadius: this.props.settings.min_radius,
+      maxRadius: this.props.settings.max_radius,
+      selectedRadius: [this.props.settings.min_radius, this.props.settings.max_radius],
+
+      minRating: this.props.settings.min_rating,
+      maxRating: this.props.settings.max_rating,
+      selectedRating: [this.props.settings.min_rating, this.props.settings.max_rating],
+
+
+      minPrice: this.props.settings.min_price,
+      maxPrice: this.props.settings.max_price,
+      selectedPrice: [this.props.settings.min_price, this.props.settings.max_price],
+      price: this.props.settings.price
+      // goHome: false
     }
 
     this.handleHomeClick = this.handleHomeClick.bind(this);
   }
 
+
+
   handleHomeClick() {
-    this.setState(() => ({
-      goHome: true
-    }));
+    this.props.saveSettings(this.currentSettings())
+    // this.setState(() => ({
+    //   goHome: true
+    // }));
+  }
+
+  currentSettings(){
+    return {
+      min_radius: this.state.minRadius,
+      max_radius: this.state.maxRadius,
+      min_rating: this.state.minRating,
+      max_rating: this.state.maxRating,
+      min_price: this.state.minPrice,
+      max_price: this.state.maxPrice,
+      price: this.state.price
+    }
   }
 
   saveRadius = (data) => {
     this.setState(() => ({
-      selectedRadius: data
+      minRadius: data[0],
+      maxRadius: data[1],
+      selectedRadius: [data[0], data[1]]
     }));
   }
 
   savePrice = (data) => {
+    console.log(this.setPriceRange(data[0], data[1]).join(','))
     this.setState(() => ({
-      selectedPrice: data
+      minPrice: data[0],
+      maxPrice: data[1],
+      selectedPrice: [data[0], data[1]],
+      price: this.setPriceRange(data[0], data[1]).join(",")
     }));
+    console.log(this.state)
+  }
+  setPriceRange(min, max) {
+    var numbers = []
+    for (var i = min ; i <= max; i++) {
+        numbers.push(i)
+    }
+    return numbers
   }
 
   saveRating = (data) => {
     this.setState(() => ({
-      selectedRating: data
+      minRating: data[0],
+      maxRating: data[1],
+      selectedRating: [data[0], data[1]]
     }));
   }
 
@@ -58,20 +100,20 @@ export default class SettingsPage extends Component {
               Settings
             </Text>
             <Text style={styles.setting}>
-              Radius:  {this.state.selectedRadius[0]} - {this.state.selectedRadius[1]} Miles
+              Radius:  {this.state.minRadius} - {this.state.maxRadius} Meters
             </Text>
             <MultiSlider style={styles.slider}
               values={this.state.selectedRadius}
               onValuesChange={this.saveRadius}
               onValuesChangeFinish={this.saveRadius}
-              min={1}
-              max={5}
+              min={500}
+              max={7000}
               step={1}
-              allowOverlap
               snapped
             />
+  
             <Text style={styles.setting}>
-                Price:  { '$'.repeat(this.state.selectedPrice[0]) } - { '$'.repeat(this.state.selectedPrice[1]) }
+                Price:  { '$'.repeat(this.state.minPrice) } - { '$'.repeat(this.state.maxPrice) }
             </Text>
             <MultiSlider style={styles.slider}
               values={this.state.selectedPrice}
@@ -83,8 +125,9 @@ export default class SettingsPage extends Component {
               allowOverlap
               snapped
             />
+
             <Text style={styles.setting}>
-              Rating:  {this.state.selectedRating[0]} - {this.state.selectedRating[1]} Stars
+              Rating:  {this.state.minRating} - {this.state.maxRating} Stars
             </Text>
             <MultiSlider style={styles.slider}
               values={this.state.selectedRating}
@@ -95,14 +138,15 @@ export default class SettingsPage extends Component {
               step={1}
               allowOverlap
               snapped
-            />
+            /> 
             <SettingSaveButton clickEvent={() => this.handleHomeClick()}/>
           </Card>
         </React.Fragment>
       )
-    } else if (this.state.goHome) {
-      content = <LandingPage />
-    }
+    } 
+    // else if (this.state.goHome) {
+    //   content = <LandingPage />
+    // }
 
     return (
       <React.Fragment>
