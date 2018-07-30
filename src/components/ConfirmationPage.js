@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, Button } from 'react-native-elements';
 import { StyleSheet } from 'react-native';
 import { WebBrowser } from 'expo';
+import { LinearGradient } from 'expo';
 
 import { lyft_client_id } from '../../config.js'
 
@@ -39,39 +40,52 @@ export default class ConfirmationPage extends Component {
   render() {
     let page;
     let distance_in_miles = Math.ceil(((this.props.destination.distance / 1000) * 0.62137))
+    if(distance_in_miles === 1) {
+      distance_in_miles = `${distance_in_miles} mile`
+    } else {
+      distance_in_miles = `${distance_in_miles} miles`
+    }
+
     console.log(String(distance_in_miles))
     console.log(this.props.destination)
 
     if(!this.state.walking) {
       page = (
         <React.Fragment>
-          <Text style={styles.confirmationHeader}>Your location has been chosen!</Text>
-          <Text style={styles.confirmationText}>It is about {distance_in_miles} miles away. Would you like to call a Lyft?</Text>
-          <Button
-            large
+          <LinearGradient
+            colors={['#03063b', '#7998fe']} 
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              height: 1000
+            }}/>
+            <Text style={styles.confirmationHeader}>Location Selected!</Text>
+            <Text style={styles.confirmationText}>It is about {distance_in_miles} away.</Text>
+            <Button
+              large
+              icon={{
+              name: 'ios-car',
+              type: 'ionicon'}}
+              buttonStyle={{
+                marginTop: 15,
+                backgroundColor: '#ab37b6',
+                borderRadius: 50
+              }}
+              onPress={this.openRideService}
+              title='Get a Lyft' />
+            <Button
             icon={{
-            name: 'ios-car',
-            type: 'ionicon'}}
+              name: 'ios-walk',
+              type: 'ionicon'}}
             buttonStyle={{
-              marginTop: 15,
+              marginTop: 25,
               backgroundColor: '#ab37b6',
-              borderRadius: 50,
-              width: 200
+              borderRadius: 50
             }}
-            onPress={this.openRideService}
-            title='Get a Lyft' />
-          <Button
-          icon={{
-            name: 'ios-walk',
-            type: 'ionicon'}}
-          buttonStyle={{
-            marginTop: 25,
-            backgroundColor: '#ab37b6',
-            borderRadius: 50,
-            width: 200
-          }}
-          onPress={this.walk}
-          title='Get Walking Directions' />
+            onPress={this.walk}
+            title='Get Walking Directions' />
         </React.Fragment>
       );
     } else if (this.state.walking) {
