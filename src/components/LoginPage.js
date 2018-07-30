@@ -15,7 +15,7 @@ export default class LoginPage extends Component {
     super(props);
 
     this.state = {
-      loggedIn: true,
+      loggedIn: false,
       result: null
     }
 
@@ -71,6 +71,7 @@ export default class LoginPage extends Component {
   async setUserState(received){
     console.log("within set user state")
     console.log(received)
+    console.log(this.setUserId)
     console.log(" ")
     this.setUserId(received)
     .then(()=>{
@@ -109,7 +110,7 @@ export default class LoginPage extends Component {
       if (auth_code === 'access_denied') {
         return
       } else {
-
+ 
         this.setTokensKeychain(parsedResponse['access_token'], parsedResponse['refresh_token'])
         .then(()=>{
 
