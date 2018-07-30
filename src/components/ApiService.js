@@ -21,7 +21,7 @@ class ApiService{
   // }
 
   static createAdventure(){
-    return this.goGet('adventures', 'post')
+    return this.goGet('adventures', 'post', null, settings)
   }
   static acceptEstimate(adventureInfo){
     return this.goGet('rides', 'post', adventureInfo)
@@ -39,13 +39,14 @@ class ApiService{
 
   // 
 
-  static async goGet(url_extension, method, headers=null){
+  static async goGet(url_extension, method, headers=null, body=null){
 
     return await fetch(`${host_url}/${api_version}/${url_extension}`, {
       method: method,
       headers: {
         payload: ApiService.encodeJwt(JSON.stringify(headers)),
-      }
+      },
+      body: body
     })
     
   }

@@ -28,6 +28,7 @@ export default class LandingPage extends Component {
     this.createAdventure = this.createAdventure.bind(this)
     this.handleHomeClick = this.handleHomeClick.bind(this)
     this.renderSettingsPage = this.renderSettingsPage.bind(this)
+    this.goGetAdventure = this.goGetAdventure.bind(this)
   }
 
   // setSettings(settings){
@@ -37,20 +38,62 @@ export default class LandingPage extends Component {
   //   )
   // }
   _getLocationAsync = async () => {
-    // let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    // if (status !== 'granted') {
-    //   this.setState({
-    //     errorMessage: 'Permission to access location was denied',
-    //   });
-    // }
+    if (Expo.Constants.isDevice) {
+      let { status } = await Permissions.askAsync(Permissions.LOCATION);
+      if (status !== 'granted') {
+        this.setState({
+          errorMessage: 'Permission to access location was denied',
+        });
+      }
 
-    // let location = await Location.getCurrentPositionAsync({});
-    // this.setState({ location });
-    return {latitude: 39.7293530 , longitude: -104.9844910}
+      let location = await Location.getCurrentPositionAsync({});
+      this.setState({ location });
+    } else {
+      this.setState(() => ({
+        
+          longitude: -104.984491000,
+          latitude: 39.729353000
+
+      }));
+    }
   };
 
-  createAdventure() {
-    console.log(this.state.max_radius)
+  async setRideSettings(){
+    console.log("in set ride settings")
+    console.log(this.state)
+    return JSON.stringify({
+      search_settings: {
+        "open_now": true,
+        "radius": this.state.settings.max_radius,
+        "latitude": await this.state.latitude,
+        "longitude": await this.state.longitude,
+        "max_price": await this.state.settings.max_price,
+        "min_price": await this.state.settings.min_price,
+        "price": await this.state.settings.price,
+        "term": "restaurants"
+        },
+      restrictions: {
+        max_rating: this.state.settings.max_rating,
+        min_rating: this.state.settings.min_rating,
+        categories:[],
+        min_radius: await this.state.settings.min_radius
+      }
+    })
+    console.log(" ")
+
+  }
+
+  async goGetAdventure(){
+    console.log("in go get adventure")
+    let body = await this.setRideSettings()
+    console.log(body)
+    return fetch('http://localhost:3000/api/v1/adventures', {
+        method: 'POST',
+        body: body 
+    })
+  }
+
+  async createAdventure() {
     this._getLocationAsync({})
     .then((location)=>{
       console.log(location)
@@ -59,36 +102,24 @@ export default class LandingPage extends Component {
       }))
     })
     .then(()=>{
-      fetch('http://localhost:3000/api/v1/adventures', {
-        method: 'POST',
-        body: JSON.stringify({
-          search_settings: {
-            "open_now": true,
-            "radius": this.state.max_radius,
-            "latitude": this.state.location.latitude,
-            "longitude": this.state.location.longitude,
-            "max_price": this.state.max_price,
-            "min_price": this.state.min_price,
-            "price": "1,2,3",
-            "term": "restaurants"
-            },
-          restrictions: {
-            categories:[],
-            min_radius: this.state.min_radius
-          }
-        })
+      console.log(this.state)
+      this.goGetAdventure()
+      .then((response) => {
+        console.log(response)
+        return response.json()
+      })
+      .then((parsedResponse) => {
+        console.log('parsed response')
+        console.log(parsedResponse)
+        this.setState(() => ({
+          rideCalled: true,
+          content: parsedResponse.destination
+        }))
+      })
+      .catch((error) => {
+        console.error(error);
       })
     })
-    .then((response) => response.json())
-    .then((parsedResponse) => {
-      this.setState(() => ({
-        rideCalled: true,
-        content: parsedResponse.destination
-      }))
-     })
-     .catch((error) => {
-       console.error(error);
-     })
   }
 
   saveSettings(settings){
@@ -127,6 +158,7 @@ export default class LandingPage extends Component {
         </React.Fragment>
       );
     } else if (this.state.rideCalled) {
+      console.log(this.state)
       pageContent = <EstimatePage price={this.state.content.price} data={this.state.content} />
     } else if (this.state.openSettings) {
       pageContent = <SettingsPage settings={this.state.settings} saveSettings={this.saveSettings}/>

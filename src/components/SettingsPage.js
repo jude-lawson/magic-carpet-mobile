@@ -24,7 +24,8 @@ export default class SettingsPage extends Component {
 
       minPrice: this.props.settings.min_price,
       maxPrice: this.props.settings.max_price,
-      selectedPrice: [this.props.settings.min_price, this.props.settings.max_price]
+      selectedPrice: [this.props.settings.min_price, this.props.settings.max_price],
+      price: this.props.settings.price
       // goHome: false
     }
 
@@ -48,6 +49,7 @@ export default class SettingsPage extends Component {
       max_rating: this.state.maxRating,
       min_price: this.state.minPrice,
       max_price: this.state.maxPrice,
+      price: this.state.price
     }
   }
 
@@ -60,12 +62,21 @@ export default class SettingsPage extends Component {
   }
 
   savePrice = (data) => {
+    console.log(this.setPriceRange(data[0], data[1]).join(','))
     this.setState(() => ({
       minPrice: data[0],
       maxPrice: data[1],
-      selectedPrice: [data[0], data[1]]
+      selectedPrice: [data[0], data[1]],
+      price: this.setPriceRange(data[0], data[1]).join(",")
     }));
-
+    console.log(this.state)
+  }
+  setPriceRange(min, max) {
+    var numbers = []
+    for (var i = min ; i <= max; i++) {
+        numbers.push(i)
+    }
+    return numbers
   }
 
   saveRating = (data) => {
