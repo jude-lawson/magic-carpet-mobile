@@ -40,7 +40,7 @@ export default class LandingPage extends Component {
       preferences: {
         search_settings: {
           "open_now": true,
-          "radius": this.state.settings.radius,
+          "radius": Math.ceil((this.state.settings.radius[1] * 1000) / .6213712),
           "latitude": this.props.location.latitude,
           "longitude": this.props.location.longitude,
           "price": this.state.settings.price,
@@ -48,7 +48,7 @@ export default class LandingPage extends Component {
         },
         restrictions: {
           categories: [],
-          min_radius: 1000
+          min_radius: 0
         }
       }
     });
@@ -56,6 +56,8 @@ export default class LandingPage extends Component {
     ApiService.goGet('adventures', 'post', { body: payload })
       .then((response) => response.json())
       .then((parsedResponse) => {
+        console.log('Destination: ')
+        console.log(parsedResponse.destination)
         this.setState({ destination: parsedResponse.destination, destinationChosen: true })
       })
       .catch((error) => {

@@ -33,7 +33,7 @@ export default class SettingsPage extends Component {
 
   getLocation() {
     this.setState({
-      latitude: defualt_origin_latitude,
+      latitude: default_origin_latitude,
       longitude: default_origin_longitude 
     })
   }
@@ -74,7 +74,7 @@ export default class SettingsPage extends Component {
               values={this.state.currentRadius}
               onValuesChange={this.saveRadius}
               onValuesChangeFinish={this.saveRadius}
-              min={1}
+              min={0}
               max={5}
               step={1}
               allowOverlap
