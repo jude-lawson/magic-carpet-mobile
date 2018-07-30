@@ -108,15 +108,13 @@ export default class LandingPage extends Component {
       console.log(this.state)
       this.goGetAdventure()
       .then((response) => {
-        console.log(response)
         return response.json()
       })
       .then((parsedResponse) => {
-        console.log('parsed response')
-        console.log(parsedResponse)
         this.setState(() => ({
           rideCalled: true,
-          content: parsedResponse.destination
+          content: parsedResponse.destination, 
+          price_range: parsedResponse.price_range
         }))
       })
       .catch((error) => {
@@ -162,7 +160,8 @@ export default class LandingPage extends Component {
       );
     } else if (this.state.rideCalled) {
       console.log(this.state)
-      pageContent = <EstimatePage price={this.state.content.price} data={this.state.content} />
+      console.log(this.state.price_range)
+      pageContent = <EstimatePage price_range={this.state.price_range} data={this.state.content} />
     } else if (this.state.openSettings) {
       pageContent = <SettingsPage settings={this.state.settings} saveSettings={this.saveSettings}/>
     }
