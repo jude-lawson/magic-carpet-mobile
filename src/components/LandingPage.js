@@ -38,10 +38,10 @@ export default class LandingPage extends Component {
       preferences: {
         search_settings: {
           "open_now": true,
-          "radius": this.props.settings.radius,
+          "radius": this.state.settings.radius,
           "latitude": this.props.location.latitude,
           "longitude": this.props.location.longitude,
-          "price": "1,2,3",
+          "price": this.state.settings.price,
           "term": "restaurants"
         },
         restrictions: {
