@@ -4,11 +4,12 @@ import { WebBrowser } from 'expo';
 
 import SettingsIcon from './SettingsIcon';
 import MagicCarpetButton from './MagicCarpetButton';
-import EstimatePage from './EstimatePage';
+// import EstimatePage from './EstimatePage';
 import HomeButton from './HomeButton';
+import ConfirmationPage from './ConfirmationPage';
 import SettingsPage from './SettingsPage';
 import ApiService from './ApiService';
-import { lyft_client_id } from '../../config.js'
+// import { lyft_client_id } from '../../config.js'
 
 export default class LandingPage extends Component {
   constructor(props) {
@@ -18,7 +19,7 @@ export default class LandingPage extends Component {
       loggedIn: true,
       rideCalled: false,
       openSettings: false,
-      destination: 'No destination chosen',
+      destination: { error: 'No destination chosen' },
       destinationChosen: false,
       settings: {
         radius: this.props.settings.radius,
@@ -55,6 +56,7 @@ export default class LandingPage extends Component {
     ApiService.goGet('adventures', 'post', { body: payload })
       .then((response) => response.json())
       .then((parsedResponse) => {
+        console.log(`This is the destination: ${parsedResponse.destination}`)
         this.setState({ destination: parsedResponse.destination, destinationChosen: true })
       })
       .catch((error) => {
@@ -95,9 +97,10 @@ export default class LandingPage extends Component {
     let pageContent;
  
     if (this.state.destinationChosen) {
-      pageContent = <EstimatePage 
-                      settings= {this.state.settings}
-                      data={this.state.destination} />
+      pageContent = <ConfirmationPage 
+                      settings={this.state.settings}
+                      data={this.state.destination}
+                      origin={this.props.location} />
     } else if (this.state.openSettings) {
       pageContent = <SettingsPage settings={this.state.settings} handleSave={(updatedSettings) => { this.updateSettings(updatedSettings) }} />
     } else if (this.state.loggedIn) {

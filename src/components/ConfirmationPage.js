@@ -1,79 +1,40 @@
 import React, { Component } from 'react';
-import { Card, Button, Text } from 'react-native-elements';
-
-import LandingPage from './LandingPage';
-import HomeButton from './HomeButton';
+import { Text, Button } from 'react-native-elements';
 
 export default class ConfirmationPage extends Component {
   constructor(props) {
-    super(props);
-
+    super(props)
     this.state = {
-      location: this.props.location,
-      settings: this.props.settings,
-      desinationVisible: false,
-      goHome: false
+      destination: this.props.data,
+      origin: this.props.origin
     }
-
-    this.revealDestination = this.revealDestination.bind(this)
-    this.handleHomeClick = this.handleHomeClick.bind(this)
+    this.openRideService = this.openRideService.bind(this)
   }
 
-  revealDestination() {
-    this.setState(() => ({
-      destinationVisible: true
-    }));
-  }
-
-  handleHomeClick() {
-    this.setState(() => ({
-      goHome: true
-    }));
+  openRideService() {
+    console.log('Opening Lyft...')
   }
 
   render() {
-    if (!this.state.destinationVisible && !this.state.goHome) {
-      content = (
-        <React.Fragment>
-          <HomeButton handleHomeClick={this.handleHomeClick} />
-          <Card
-            title='Hooray!' >
-            <Text>Your ride is on its way!</Text>
-          </Card>
-          <Button 
-            raised
-            large
-            buttonStyle={{
-              borderRadius: 50,
-              marginTop: 20,
-              backgroundColor: '#4fb859'
-            }}
-            title='Reveal Your Destination'
-            onPress={this.revealDestination} />
-        </React.Fragment>
-      );
-    } else if (this.state.destinationVisible && !this.state.goHome) {
-      content = (
-        <React.Fragment>
-          <HomeButton handleHomeClick={this.handleHomeClick} />
-          <Card
-            title='This is your destination'>
-            <Text>Name: {this.props.data.name}</Text>
-            <Text>Address: {this.props.data.street_address}</Text>
-            <Text>City: {this.props.data.city}</Text>
-            <Text>Rating: {this.props.data.rating}</Text>
-          </Card>
-        </React.Fragment>
-      );
-    } else if (this.state.goHome) {
-      content = <LandingPage
-                  location={this.state.location}
-                  settings={this.state.settings} />
-    }
-
+    console.log(this.props.data)
+    let distance_in_miles = Math.ceil(((this.props.data.distance / 1000) * 0.62137))
+    console.log(String(distance_in_miles))
     return (
       <React.Fragment>
-        {content}
+        <Text>Your location has been chosen!</Text>
+        <Text>It is about {distance_in_miles} miles away. Would you like to call a Lyft?</Text>
+        <Button
+          large
+          icon={{
+           name: 'ios-car',
+           type: 'ionicon'}}
+          buttonStyle={{
+            backgroundColor: '#ab37b6',
+            borderRadius: 50,
+            width: 200
+          }}
+          onPress={this.openRideService}
+          title='Get a Lyft' />
       </React.Fragment>
     );
   }
