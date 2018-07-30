@@ -99,7 +99,7 @@ export default class LandingPage extends Component {
     if (this.state.destinationChosen) {
       pageContent = <ConfirmationPage 
                       settings={this.state.settings}
-                      data={this.state.destination}
+                      destination={this.state.destination}
                       origin={this.props.location} />
     } else if (this.state.openSettings) {
       pageContent = <SettingsPage settings={this.state.settings} handleSave={(updatedSettings) => { this.updateSettings(updatedSettings) }} />

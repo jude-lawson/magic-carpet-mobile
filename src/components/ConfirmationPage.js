@@ -4,10 +4,12 @@ import { Text, Button } from 'react-native-elements';
 export default class ConfirmationPage extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
-      destination: this.props.data,
+      destination: this.props.destination,
       origin: this.props.origin
     }
+
     this.openRideService = this.openRideService.bind(this)
   }
 
@@ -16,8 +18,8 @@ export default class ConfirmationPage extends Component {
   }
 
   render() {
-    console.log(this.props.data)
-    let distance_in_miles = Math.ceil(((this.props.data.distance / 1000) * 0.62137))
+    console.log(this.props.destination)
+    let distance_in_miles = Math.ceil(((this.props.destination.distance / 1000) * 0.62137))
     console.log(String(distance_in_miles))
     return (
       <React.Fragment>
