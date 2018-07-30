@@ -2,7 +2,7 @@
 import { SecureStore } from 'expo';
 import { handshake, host_url, api_version } from '../../config'
 
-class ApiService{
+class ApiService {
 
   static encodeJwt(payload){
     // return JWT.encode(payload, handshake, {algorithm: 'HS384' })

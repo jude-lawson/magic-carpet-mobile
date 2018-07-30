@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native'
 import { Card, Text, Button, View } from 'react-native-elements';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import { MultiSlider } from '@ptomasroos/react-native-multi-slider';
 import { SecureStore } from 'expo';
-import LandingPage from './LandingPage';
-import HomeButton from './HomeButton';
-import SettingSaveButton from './SettingSaveButton'
 
-export default class SettingsPage extends Component {
+import LandingPage from './LandingPage';
+import { HomeButton } from './HomeButton';
+import { SettingSaveButton } from './SettingSaveButton'
+
+export class SettingsPage extends Component {
   constructor(props) {
     super(props);
 

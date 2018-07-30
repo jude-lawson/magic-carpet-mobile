@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
 
-export class MagicCarpetButton extends Component {
+
+export class CancelButton extends Component {
   constructor(props) {
     super(props);
+
   }
 
   render() {
@@ -11,14 +13,14 @@ export class MagicCarpetButton extends Component {
       <Button
         raised
         large
-        title='Magic Carpet'
         buttonStyle={{
-          backgroundColor: '#ab37b6',
           borderRadius: 50,
-          width: 200
+          marginTop: 20,
+          backgroundColor: '#4fb859'
         }}
-        containerViewStyle={{ borderRadius: 50 }}
-        onPress={this.props.clickEvent} />
+        title='Cancel Ride'
+        onPress={this.props.cancelRide}
+      />
     );
   }
 }

@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Card, Text, Button } from 'react-native';
 import { encode as btoa, decode as atob } from 'base-64';
 import { WebBrowser, SecureStore } from 'expo';
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
 
-import CancelButton from './CancelButton';
-import LandingPage from './LandingPage'
-import LyftService from '../services/LyftService'
+import LandingPage from './LandingPage';
+import { LyftService } from '../services/LyftService';
+import { HomeButton } from './HomeButton';
+import { CancelButton } from './CancelButton';
+import { DestinationButton } from './DestinationButton';
 
-export default class RidePage extends Component {
+export class RidePage extends Component {
   constructor(props) {
     super(props);
 
@@ -64,7 +66,7 @@ export default class RidePage extends Component {
           pickedUp: true
         }));
       }
-    }
+    })
   }
 
   cancelRide() {
@@ -86,10 +88,11 @@ export default class RidePage extends Component {
   }
 
   render() {
+    let content;
     if (this.state.goHome || this.state.rideCancelled) {
       content = <LandingPage />
     } else if (this.state.pickedUp) {
-      content = <ReviewsPage />
+      content = <LandingPage />
     } else if (this.state.destinationVisible) {
       content = (
         <React.Fragment>
@@ -111,26 +114,8 @@ export default class RidePage extends Component {
             title='Ride Status' >
             <Text>{this.state.rideStatus}</Text>
           </Card>
-          <Button
-            raised
-            large
-            buttonStyle={{
-              borderRadius: 50,
-              marginTop: 20,
-              backgroundColor: '#4fb859'
-            }}
-            title='Reveal Your Destination'
-            onPress={this.revealDestination()} />
-          <Button
-            raised
-            large
-            buttonStyle={{
-              borderRadius: 50,
-              marginTop: 20,
-              backgroundColor: '#4fb859'
-            }}
-            title='Cancel Ride'
-            onPress={this.cancelRide()} />
+          <DestinationButton revealDestination={this.revealDestination} />
+          <CancelButton cancelRide={this.cancelRide} />
         </React.Fragment>
       )
     }

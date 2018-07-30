@@ -3,10 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { Card, Button, Text } from 'react-native-elements';
 
 import LandingPage from './LandingPage';
-import ConfirmationPage from './ConfirmationPage';
-import HomeButton from './HomeButton';
+import { HomeButton } from './HomeButton';
+import { RidePage } from './RidePage';
 
-export default class EstimatePage extends Component {
+export class EstimatePage extends Component {
   constructor(props) {
     super(props);
 

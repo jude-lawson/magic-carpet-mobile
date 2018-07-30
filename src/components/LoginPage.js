@@ -4,10 +4,10 @@ import { encode as btoa, decode as atob } from 'base-64';
 import { WebBrowser, SecureStore } from 'expo';
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
 
-import LyftLoginButton from './LyftLoginButton';
+import { LyftLoginButton } from './LyftLoginButton';
 import LandingPage from './LandingPage'
-import LyftService from '../services/LyftService'
-import ApiService from './ApiService'
+import { LyftService } from '../services/LyftService'
+import { ApiService } from './ApiService'
 
 
 export default class LoginPage extends Component {
