@@ -14,7 +14,7 @@ export default class LandingPage extends Component {
     super(props);
     this.state = {
       content: 'This is the current body',
-      rideCalled: false,
+      rideCalled: true,
       openSettings: false
     }
 

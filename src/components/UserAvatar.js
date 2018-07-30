@@ -8,7 +8,7 @@ export default class UserAvatar extends Component {
       <Icon
         containerStyle={styles.userAvatarContainer}
         size={45}
-        color='#7998fe' 
+        color='#7998fe'
         name='ios-person'
         type='ionicon' />
     );
