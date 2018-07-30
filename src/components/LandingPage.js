@@ -56,7 +56,6 @@ export default class LandingPage extends Component {
     ApiService.goGet('adventures', 'post', { body: payload })
       .then((response) => response.json())
       .then((parsedResponse) => {
-        console.log(`This is the destination: ${parsedResponse.destination}`)
         this.setState({ destination: parsedResponse.destination, destinationChosen: true })
       })
       .catch((error) => {
