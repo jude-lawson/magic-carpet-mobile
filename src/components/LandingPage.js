@@ -38,7 +38,7 @@ export default class LandingPage extends Component {
       preferences: {
         search_settings: {
           "open_now": true,
-          "radius": [1,1],
+          "radius": this.props.settings.radius,
           "latitude": this.props.location.latitude,
           "longitude": this.props.location.longitude,
           "price": "1,2,3",

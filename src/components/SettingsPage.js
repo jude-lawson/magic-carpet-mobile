@@ -15,16 +15,26 @@ export default class SettingsPage extends Component {
       currentRadius: this.props.settings.radius,
       currentPrice: this.props.settings.price,
       currentRating: this.props.settings.rating,
+      latitude: null,
+      longitude: null,
       goHome: false
     }
 
     this.handleHomeClick = this.handleHomeClick.bind(this);
+    this.getLocation = this.getLocation.bind(this);
   }
 
   handleHomeClick() {
     this.setState(() => ({
       goHome: true
     }));
+  }
+
+  getLocation() {
+    this.setState({
+      latitude: "39.987446",
+      longitude: "-105.097224" 
+    })
   }
 
   saveRadius = (data) => {
@@ -98,13 +108,16 @@ export default class SettingsPage extends Component {
             <SettingSaveButton clickEvent={() => {
                 let updated_settings = { radius: this.state.currentRadius, price: this.state.currentPrice, rating: this.state.currentRating }
                 this.props.handleSave(updated_settings)
+                this.getLocation()
                 this.handleHomeClick()
               }}/>
           </Card>
         </React.Fragment>
       )
     } else if (this.state.goHome) {
-      content = <LandingPage settings={{ radius: this.state.currentRadius, price: this.state.currentPrice, rating: this.state.currentRating }} />
+      content = <LandingPage 
+                  location={{ latitude: this.state.latitude, longitude: this.state.longitude }}
+                  settings={{ radius: this.state.currentRadius, price: this.state.currentPrice, rating: this.state.currentRating }} />
     }
 
     return (
