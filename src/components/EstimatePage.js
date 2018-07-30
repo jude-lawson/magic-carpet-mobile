@@ -11,6 +11,11 @@ export default class EstimatePage extends Component {
     super(props);
 
     this.state = {
+      currentRadius: this.props.settings.radius,
+      currentPrice: this.props.settings.price,
+      currentRating: this.props.settings.rating,
+      latitude: null,
+      longitude: null,
       confirmed: false
     }
 
@@ -37,6 +42,13 @@ export default class EstimatePage extends Component {
     }));
   }
 
+  getLocation() {
+    this.setState({
+      latitude: "39.987446",
+      longitude: "-105.097224" 
+    })
+  }
+
   render() {
     let content;
     if (!this.state.confirmed) {
@@ -60,14 +72,19 @@ export default class EstimatePage extends Component {
               buttonStyle={styles.buttonStyle}
               title='NO'
               backgroundColor='#db504a'
-              onPress={this.handleDecline} />
+              onPress={() => {
+                this.handleDecline();
+                this.getLocation(); 
+              }} />
           </View>
         </React.Fragment>
       )
     } else if (this.state.confirmed === 'confirmed') {
       content = <ConfirmationPage data={this.props.data} />
     } else if (this.state.confirmed === 'declined') {
-      content = <LandingPage />
+      content = <LandingPage
+                  location={{ latitude: this.state.latitude, longitude: this.state.longitude }}
+                  settings={{ radius: this.state.currentRadius, price: this.state.currentPrice, rating: this.state.currentRating }} />
     }
 
     return (

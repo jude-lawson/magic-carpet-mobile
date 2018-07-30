@@ -94,7 +94,7 @@ export default class LandingPage extends Component {
     let pageContent;
  
     if (this.state.rideCalled) {
-      pageContent = <EstimatePage price={this.state.destination.price} data={this.state.destination} />
+      pageContent = <EstimatePage data={this.state.destination} />
     } else if (this.state.openSettings) {
       pageContent = <SettingsPage settings={this.state.settings} handleSave={(updatedSettings) => { this.updateSettings(updatedSettings) }} />
     } else if (this.state.loggedIn) {
