@@ -15,13 +15,25 @@ export default class LandingPage extends Component {
     this.state = {
       content: 'This is the current body',
       rideCalled: false,
-      openSettings: false
+      openSettings: false,
+      settings: this.props.settings
     }
-
+    console.log(' ')
+    console.log("landing page props")
+    console.log(this.props)
+    console.log(' ')
+    this.saveSettings = this.saveSettings.bind(this)
     this.createAdventure = this.createAdventure.bind(this)
     this.handleHomeClick = this.handleHomeClick.bind(this)
     this.renderSettingsPage = this.renderSettingsPage.bind(this)
   }
+
+  // setSettings(settings){
+  //   this.setState(
+  //     ()=>({settings: settings,
+  //           openSettings:false})
+  //   )
+  // }
 
   createAdventure() {
     fetch('http://localhost:3000/api/v1/adventures', {
@@ -47,6 +59,18 @@ export default class LandingPage extends Component {
      .catch((error) => {
        console.error(error);
      })
+  }
+
+  saveSettings(settings){
+    console.log(settings)
+    this.setState(()=>({
+      settings: settings,
+      openSettings: false
+    }))
+    console.log('after setting the new settings')
+    console.log(this.state)
+    console.log(this.props)
+    console.log(' ')
   }
 
   handleHomeClick() {
@@ -75,7 +99,7 @@ export default class LandingPage extends Component {
     } else if (this.state.rideCalled) {
       pageContent = <EstimatePage price={this.state.content.price} data={this.state.content} />
     } else if (this.state.openSettings) {
-      pageContent = <SettingsPage />
+      pageContent = <SettingsPage settings={this.state.settings} saveSettings={this.saveSettings}/>
     }
 
     return (
