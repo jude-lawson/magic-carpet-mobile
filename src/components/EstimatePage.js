@@ -11,7 +11,7 @@ export default class EstimatePage extends Component {
     super(props);
 
     this.state = {
-      confirmed: 'confirmed'
+      confirmed: false
     }
 
     this.handleConfirmation = this.handleConfirmation.bind(this)
@@ -89,7 +89,8 @@ const styles = StyleSheet.create({
     width: 250
   },
   textStyle: {
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: 17,
   },
   buttonStyle: {
     marginTop: 12,

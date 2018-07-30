@@ -20,44 +20,36 @@ export default class RidePage extends Component {
       desinationVisible: false,
       goHome: false,
       pickedUp: false,
-      rideStatus: null
+      rideStatus: 'Magic Carpet is locating your ride!'
     }
+
+    this.rideStatus()
 
     this.cancelRide = this.cancelRide.bind(this)
     this.revealDestination = this.revealDestination.bind(this)
     this.handleHomeClick = this.handleHomeClick.bind(this)
   };
 
-  componentDidMount() {
-    setTimer(1500)
-  }
-
-  setTimer(interval) {
-    var timer = setInterval(()=> this.rideStatus(), interval)
-  }
-
   rideStatus() {
     LyftService.getStatus()
     .then((response) => response.json())
     .then((parsedResponse) => {
       if (parsedResponse['status'] === 'pending') {
-        this.setState(() => ({
-          rideStatus: 'Magic Carpet is locating your ride!'
-        }));
+        var timer = setInterval(()=> this.rideStatus(), 15000);
       } else if (parsedResponse['status'] === 'accepted') {
         clearInterval(timer);
         var minutes = Math.floor(parsedResponse['origin']['eta_seconds'] / 60);
         if (minutes >= 3) {
-          setTimer(30000)
+          var timer = setInterval(()=> this.rideStatus(), 30000);
         } else {
-          setTimer(15000)
+          var timer = setInterval(()=> this.rideStatus(), 15000);
         };
         this.setState(() => ({
           rideStatus: `${parsedResponse['driver']['first_name']} is on the way and is approximately ${minutes} minutes away.  Look out for a ${parsedResponse['vehicle']['color']} ${parsedResponse['vehicle']['make']} with license plate number ${parsedResponse['vehicle']['license_plate']}!`
         }));
       } else if (parsedResponse['status'] === 'arrived') {
         clearInterval(timer);
-        setTimer(30000);
+        var timer = setInterval(()=> this.rideStatus(), 30000);
         this.setState(() => ({
           rideStatus: `${parsedResponse['driver']['first_name']} has arrived.  Find a ${parsedResponse['vehicle']['color']} ${parsedResponse['vehicle']['make']} with license plate number ${parsedResponse['vehicle']['license_plate']}!`
         }));
@@ -111,8 +103,8 @@ export default class RidePage extends Component {
       content = (
         <React.Fragment>
           <HomeButton handleHomeClick={this.handleHomeClick} />
-          <Card title='Ride Status'>
-            <Text>{this.state.rideStatus}</Text>
+          <Card title='Ride Status' style={styles.header}>
+            <Text style={styles.text}>{this.state.rideStatus}</Text>
           </Card>
           <DestinationButton revealDestination={this.revealDestination} />
           <CancelButton cancelRide={this.cancelRide} />
@@ -159,6 +151,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333',
     marginBottom: 5,
+    fontSize: 20,
   },
   buttons: {
    justifyContent: 'space-between',
