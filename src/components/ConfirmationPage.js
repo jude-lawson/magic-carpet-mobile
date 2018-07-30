@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Text, Button } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 
+import { lyft_client_id } from '../../config.js'
+
 export default class ConfirmationPage extends Component {
   constructor(props) {
     super(props)
@@ -15,12 +17,16 @@ export default class ConfirmationPage extends Component {
   }
 
   openRideService() {
-    // WebBrowser.openBrowserAsync(`https://lyft.com/ride?id=lyft&pickup[latitude]=39.9721648&pickup[longitude]=-105.08742&partner=${lyft_client_id}&destination[latitude]=39.9877087&destination[longitude]=-105.0858611`)
-    console.log(`Destination latitude: ${this.state.destination.latitude}`)
-    console.log(`Destination longitude: ${this.state.destination.longitude}`)
-    console.log(`Origin latitude: ${this.state.origin.latitude}`)
-    console.log(`Origin longitude: ${this.state.origin.longitude}`)
+    let destination_latitude = this.state.destination.latitude
+    let destination_longitude = this.state.destination.longitude
+    let origin_latitude = this.state.origin.latitude
+    let origin_longitude = this.state.origin.longitude
+    console.log(`Destination latitude: ${destination_latitude}`)
+    console.log(`Destination longitude: ${destination_longitude}`)
+    console.log(`Origin latitude: ${origin_latitude}`)
+    console.log(`Origin longitude: ${origin_longitude}`)
     console.log('Opening Lyft...')
+    WebBrowser.openBrowserAsync(`https://lyft.com/ride?id=lyft&pickup[latitude]=${origin_latitude}&pickup[longitude]=${origin_longitude}&partner=${lyft_client_id}&destination[latitude]=${destination_latitude}&destination[longitude]=${destination_longitude}`)
   }
 
   render() {
