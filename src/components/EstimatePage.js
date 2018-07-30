@@ -59,7 +59,7 @@ export default class EstimatePage extends Component {
           containerStyle={styles.cardStyle}
           wrapperStyle={{ height: 20 }}
           title='Confirm Your Price'>
-            <Text style={styles.textStyle}>This ride will cost: {this.props.price}</Text>
+            <Text style={styles.textStyle}>This ride will cost: {this.props.data.price}</Text>
             <Text style={styles.textStyle}>Does this work for you?</Text>
           </Card>
           <View style={styles.buttonContainer}>
@@ -80,7 +80,10 @@ export default class EstimatePage extends Component {
         </React.Fragment>
       )
     } else if (this.state.confirmed === 'confirmed') {
-      content = <ConfirmationPage data={this.props.data} />
+      content = <ConfirmationPage 
+                  data={this.props.data} 
+                  location={{ latitude: this.state.latitude, longitude: this.state.longitude }}
+                  settings={{ radius: this.state.currentRadius, price: this.state.currentPrice, rating: this.state.currentRating }}/>
     } else if (this.state.confirmed === 'declined') {
       content = <LandingPage
                   location={{ latitude: this.state.latitude, longitude: this.state.longitude }}

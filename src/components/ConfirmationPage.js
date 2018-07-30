@@ -9,6 +9,8 @@ export default class ConfirmationPage extends Component {
     super(props);
 
     this.state = {
+      location: this.props.location,
+      settings: this.props.settings,
       desinationVisible: false,
       goHome: false
     }
@@ -64,7 +66,9 @@ export default class ConfirmationPage extends Component {
         </React.Fragment>
       );
     } else if (this.state.goHome) {
-      content = <LandingPage />
+      content = <LandingPage
+                  location={this.state.location}
+                  settings={this.state.settings} />
     }
 
     return (

@@ -18,7 +18,8 @@ export default class LandingPage extends Component {
       loggedIn: true,
       rideCalled: false,
       openSettings: false,
-      destination: 'Default',
+      destination: 'No destination chosen',
+      destinationChosen: false,
       settings: {
         radius: this.props.settings.radius,
         price: this.props.settings.price,
@@ -54,7 +55,7 @@ export default class LandingPage extends Component {
     ApiService.goGet('adventures', 'post', { body: payload })
       .then((response) => response.json())
       .then((parsedResponse) => {
-        this.setState({ destination: parsedResponse.destination} )
+        this.setState({ destination: parsedResponse.destination, destinationChosen: true })
       })
       .catch((error) => {
         console.error(error);
@@ -93,8 +94,10 @@ export default class LandingPage extends Component {
   render() {
     let pageContent;
  
-    if (this.state.rideCalled) {
-      pageContent = <EstimatePage data={this.state.destination} />
+    if (this.state.destinationChosen) {
+      pageContent = <EstimatePage 
+                      settings= {this.state.settings}
+                      data={this.state.destination} />
     } else if (this.state.openSettings) {
       pageContent = <SettingsPage settings={this.state.settings} handleSave={(updatedSettings) => { this.updateSettings(updatedSettings) }} />
     } else if (this.state.loggedIn) {
