@@ -5,6 +5,7 @@ import { Location, Permissions } from 'expo';
 // import LoginPage from './src/components/LoginPage'
 import LandingPage from './src/components/LandingPage'
 import Gradient from './src/components/Gradient'
+import { default_origin_latitude, default_origin_longitude } from './config.js'
 
 export default class App extends Component {
   constructor() {
@@ -43,8 +44,8 @@ export default class App extends Component {
      /* The simulator was being weird, so I'm leaving this commented out for now */
 
     this.setState({
-      latitude: "39.987344",
-      longitude: "-105.083387" 
+      latitude: default_origin_latitude,
+      longitude: default_origin_longitude 
     })
   }
 

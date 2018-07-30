@@ -5,6 +5,7 @@ import { Card, Button, Text } from 'react-native-elements';
 import LandingPage from './LandingPage';
 import ConfirmationPage from './ConfirmationPage';
 import HomeButton from './HomeButton';
+import { default_origin_latitude, default_origin_longitude } from '../../config.js'
 
 export default class EstimatePage extends Component {
   constructor(props) {
@@ -44,8 +45,8 @@ export default class EstimatePage extends Component {
 
   getLocation() {
     this.setState({
-      latitude: "39.987344",
-      longitude: "-105.083387" 
+      latitude: default_origin_latitude,
+      longitude: default_origin_longitude 
     })
   }
 

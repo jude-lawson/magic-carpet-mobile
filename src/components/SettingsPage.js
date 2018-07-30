@@ -6,6 +6,7 @@ import { SecureStore } from 'expo';
 import LandingPage from './LandingPage';
 import HomeButton from './HomeButton';
 import SettingSaveButton from './SettingSaveButton'
+import { default_origin_latitude, default_origin_longitude } from '../../config.js'
 
 export default class SettingsPage extends Component {
   constructor(props) {
@@ -32,8 +33,8 @@ export default class SettingsPage extends Component {
 
   getLocation() {
     this.setState({
-      latitude: "39.987344",
-      longitude: "-105.083387" 
+      latitude: defualt_origin_latitude,
+      longitude: default_origin_longitude 
     })
   }
 
