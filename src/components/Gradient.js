@@ -4,8 +4,8 @@ import { LinearGradient } from 'expo';
 export default class Gradient extends Component {
   render() {
     return (
-      <LinearGradient 
-        colors={['#03063b', '#7998fe']} 
+      <LinearGradient
+        colors={['#03063b', '#7998fe']}
         style={{
           position: 'absolute',
           left: 0,

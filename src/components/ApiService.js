@@ -1,8 +1,8 @@
-import JWT from 'expo-jwt'
+// import JWT from 'expo-jwt'
 import { SecureStore } from 'expo';
 import { handshake, host_url, api_version } from '../../config'
 
-class ApiService{
+class ApiService {
 
   static encodeJwt(payload){
     // return JWT.encode(payload, handshake, {algorithm: 'HS384' })
@@ -14,7 +14,7 @@ class ApiService{
     return payload
   }
 
-  // static getFromKeychain(key){ 
+  // static getFromKeychain(key){
   //   SecureStore.getItemAsync(key)
   //     .then((response) => {return response})
   //     .catch((error)=>console.log(error))
@@ -29,7 +29,7 @@ class ApiService{
   }
 
   static async getInfo(){
-    const token = await SecureStore.getItemAsync('lyft_token') 
+    const token = await SecureStore.getItemAsync('lyft_token')
     const refresh_token = await SecureStore.getItemAsync('lyft_refresh_token')
     if (SecureStore.getItemAsync('id')) {
       console.log("id found")
@@ -44,7 +44,7 @@ class ApiService{
     return await this.goGet('users', 'post', user_info)
   }
 
-  // 
+  //
 
   static async goGet(url_extension, method, headers=null, body=null){
 
@@ -55,7 +55,7 @@ class ApiService{
       },
       body: body
     })
-    
+
   }
 }
 export default ApiService
@@ -70,7 +70,7 @@ export default ApiService
   //     (response)=> {
   //       lyft_token = response
   //       return SecureStore.getItemAsync("lyftRefreshToken")
-  //       .then((response)=>{ 
+  //       .then((response)=>{
   //         lyft_refresh_token = response
   //         return SecureStore.getItemAsync("id")
   //         .then((response)=>{
@@ -100,7 +100,7 @@ export default ApiService
   // .then((payload) => {
   //   console.log('getting from keychain (6.5)')
   //   console.log(payload)
-    
+
   //   .then((data)=>{
   //     return data._bodyText
   //   })
