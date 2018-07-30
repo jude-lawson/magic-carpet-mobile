@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import LoginPage from './src/components/LoginPage'
-import { Gradient } from './src/components/Gradient'
+import Gradient from './src/components/Gradient'
 
 export default class App extends Component {
   render() {

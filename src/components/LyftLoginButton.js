@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
 
 
-export class LyftLoginButton extends Component {
+export default class LyftLoginButton extends Component {
   constructor(props) {
     super(props);
 

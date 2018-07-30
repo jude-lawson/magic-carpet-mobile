@@ -5,10 +5,10 @@ import { MultiSlider } from '@ptomasroos/react-native-multi-slider';
 import { SecureStore } from 'expo';
 
 import LandingPage from './LandingPage';
-import { HomeButton } from './HomeButton';
-import { SettingSaveButton } from './SettingSaveButton'
+import HomeButton from './HomeButton';
+import SettingSaveButton from './SettingSaveButton'
 
-export class SettingsPage extends Component {
+export default class SettingsPage extends Component {
   constructor(props) {
     super(props);
 

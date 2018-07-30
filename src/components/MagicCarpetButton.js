@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
 
-export class MagicCarpetButton extends Component {
+export default class MagicCarpetButton extends Component {
   constructor(props) {
     super(props);
   }

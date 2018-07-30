@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
 
 
-export class DestinationButton extends Component {
+export default class DestinationButton extends Component {
   constructor(props) {
     super(props);
 

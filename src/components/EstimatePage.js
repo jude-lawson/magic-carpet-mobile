@@ -3,15 +3,15 @@ import { StyleSheet, View } from 'react-native';
 import { Card, Button, Text } from 'react-native-elements';
 
 import LandingPage from './LandingPage';
-import { HomeButton } from './HomeButton';
-import { RidePage } from './RidePage';
+import HomeButton from './HomeButton';
+import RidePage from './RidePage';
 
-export class EstimatePage extends Component {
+export default class EstimatePage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      confirmed: null
+      confirmed: 'confirmed'
     }
 
     this.handleConfirmation = this.handleConfirmation.bind(this)

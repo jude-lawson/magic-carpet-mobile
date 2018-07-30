@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-export class HomeButton extends Component {
+export default class HomeButton extends Component {
   constructor(props) {
     super(props);
   }

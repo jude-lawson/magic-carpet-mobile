@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
 
-export class SettingSaveButton extends Component {
+export default class SettingSaveButton extends Component {
   constructor(props) {
     super(props);
 

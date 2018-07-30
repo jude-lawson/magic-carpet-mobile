@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { StyleSheet, Card, Text, Button } from 'react-native';
+import { StyleSheet, Text, Button } from 'react-native';
+import { Card } from 'react-native-elements';
 import { encode as btoa, decode as atob } from 'base-64';
 import { WebBrowser, SecureStore } from 'expo';
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
 
 import LandingPage from './LandingPage';
-import { LyftService } from '../services/LyftService';
-import { HomeButton } from './HomeButton';
-import { CancelButton } from './CancelButton';
-import { DestinationButton } from './DestinationButton';
+import LyftService from '../services/LyftService';
+import HomeButton from './HomeButton';
+import CancelButton from './CancelButton';
+import DestinationButton from './DestinationButton';
 
-export class RidePage extends Component {
+export default class RidePage extends Component {
   constructor(props) {
     super(props);
 
@@ -36,7 +37,7 @@ export class RidePage extends Component {
   }
 
   rideStatus() {
-    LyftService.get_status()
+    LyftService.getStatus()
     .then((response) => response.json())
     .then((parsedResponse) => {
       if (parsedResponse['status'] === 'pending') {
@@ -110,8 +111,7 @@ export class RidePage extends Component {
       content = (
         <React.Fragment>
           <HomeButton handleHomeClick={this.handleHomeClick} />
-          <Card
-            title='Ride Status' >
+          <Card title='Ride Status'>
             <Text>{this.state.rideStatus}</Text>
           </Card>
           <DestinationButton revealDestination={this.revealDestination} />

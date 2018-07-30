@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { LinearGradient } from 'expo';
 
-export class Gradient extends Component {
+export default class Gradient extends Component {
   render() {
     return (
       <LinearGradient

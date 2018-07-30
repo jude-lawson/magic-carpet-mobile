@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-elements';
 
-import { SettingsIcon } from './SettingsIcon';
-import { MagicCarpetButton } from './MagicCarpetButton';
-import { EstimatePage } from './EstimatePage';
-import { HomeButton } from './HomeButton';
-import { SettingsPage } from './SettingsPage';
-import { UserAvatar } from './UserAvatar';
+import SettingsIcon from './SettingsIcon';
+import MagicCarpetButton from './MagicCarpetButton';
+import EstimatePage from './EstimatePage';
+import HomeButton from './HomeButton';
+import SettingsPage from './SettingsPage';
+import UserAvatar from './UserAvatar';
 
 export default class LandingPage extends Component {
   constructor(props) {

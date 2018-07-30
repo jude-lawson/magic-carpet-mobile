@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
 
 
-export class CancelButton extends Component {
+export default class CancelButton extends Component {
   constructor(props) {
     super(props);
 

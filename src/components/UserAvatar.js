@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 
-export class UserAvatar extends Component {
+export default class UserAvatar extends Component {
   render() {
     return (
       <Icon
