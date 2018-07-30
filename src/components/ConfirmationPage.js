@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, Button } from 'react-native-elements';
+import { StyleSheet } from 'react-native';
 import { WebBrowser } from 'expo';
 
 import { lyft_client_id } from '../../config.js'
@@ -44,8 +45,8 @@ export default class ConfirmationPage extends Component {
     if(!this.state.walking) {
       page = (
         <React.Fragment>
-          <Text>Your location has been chosen!</Text>
-          <Text>It is about {distance_in_miles} miles away. Would you like to call a Lyft?</Text>
+          <Text style={styles.confirmationHeader}>Your location has been chosen!</Text>
+          <Text style={styles.confirmationText}>It is about {distance_in_miles} miles away. Would you like to call a Lyft?</Text>
           <Button
             large
             icon={{
@@ -86,3 +87,22 @@ export default class ConfirmationPage extends Component {
     );
   }
 }
+
+const styles=StyleSheet.create({
+  confirmationText: {
+    color: '#FEFEFE',
+    fontSize: 18,
+    marginLeft: 8,
+    marginRight: 8,
+    textAlign: 'center'
+  },
+
+  confirmationHeader: {
+    color: '#FEFEFE',
+    fontSize: 32,
+    marginLeft: 8,
+    marginRight: 8,
+    marginBottom: 8,
+    textAlign: 'center'
+  }
+})
