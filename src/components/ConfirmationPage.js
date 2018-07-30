@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, Button } from 'react-native-elements';
+import { WebBrowser } from 'expo';
 
 export default class ConfirmationPage extends Component {
   constructor(props) {
@@ -14,6 +15,11 @@ export default class ConfirmationPage extends Component {
   }
 
   openRideService() {
+    // WebBrowser.openBrowserAsync(`https://lyft.com/ride?id=lyft&pickup[latitude]=39.9721648&pickup[longitude]=-105.08742&partner=${lyft_client_id}&destination[latitude]=39.9877087&destination[longitude]=-105.0858611`)
+    console.log(`Destination latitude: ${this.state.destination.latitude}`)
+    console.log(`Destination longitude: ${this.state.destination.longitude}`)
+    console.log(`Origin latitude: ${this.state.origin.latitude}`)
+    console.log(`Origin longitude: ${this.state.origin.longitude}`)
     console.log('Opening Lyft...')
   }
 

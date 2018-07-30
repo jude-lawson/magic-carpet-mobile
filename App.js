@@ -43,8 +43,8 @@ export default class App extends Component {
      /* The simulator was being weird, so I'm leaving this commented out for now */
 
     this.setState({
-      latitude: "39.987446",
-      longitude: "-105.097224" 
+      latitude: "39.987344",
+      longitude: "-105.083387" 
     })
   }
 

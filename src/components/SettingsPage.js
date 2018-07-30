@@ -32,8 +32,8 @@ export default class SettingsPage extends Component {
 
   getLocation() {
     this.setState({
-      latitude: "39.987446",
-      longitude: "-105.097224" 
+      latitude: "39.987344",
+      longitude: "-105.083387" 
     })
   }
 
