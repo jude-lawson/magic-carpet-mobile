@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native'
 import { Card, Text, Button, View } from 'react-native-elements';
-import { MultiSlider } from '@ptomasroos/react-native-multi-slider';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { SecureStore } from 'expo';
 
 import LandingPage from './LandingPage';
@@ -90,60 +90,59 @@ export default class SettingsPage extends Component {
 
   render() {
     let content;
-    if (!this.state.goHome) {
-      content = (
-        <React.Fragment>
-          <HomeButton handleHomeClick={this.handleHomeClick} />
-          <Card
-            wrapperStyle={{ width: 300 }}>
-            <Text style={styles.card_heading}>
-              Settings
-            </Text>
-            <Text style={styles.setting}>
-              Radius:  {this.state.minRadius} - {this.state.maxRadius} Meters
-            </Text>
-            <MultiSlider style={styles.slider}
-              values={this.state.selectedRadius}
-              onValuesChange={this.saveRadius}
-              onValuesChangeFinish={this.saveRadius}
-              min={500}
-              max={7000}
-              step={1}
-              snapped
-            />
-  
-            <Text style={styles.setting}>
-                Price:  { '$'.repeat(this.state.minPrice) } - { '$'.repeat(this.state.maxPrice) }
-            </Text>
-            <MultiSlider style={styles.slider}
-              values={this.state.selectedPrice}
-              onValuesChange={this.savePrice}
-              onValuesChangeFinish={this.savePrice}
-              min={1}
-              max={4}
-              step={1}
-              allowOverlap
-              snapped
-            />
+    content = (
+      <React.Fragment>
+        <HomeButton handleHomeClick={this.handleHomeClick} />
+        <Card
+          wrapperStyle={{ width: 300 }}>
+          <Text style={styles.card_heading}>
+            Settings
+          </Text>
+          <Text style={styles.setting}>
+            Radius:  {this.state.minRadius} - {this.state.maxRadius} Meters
+          </Text>
+          <MultiSlider style={styles.slider}
+            values={this.state.selectedRadius}
+            onValuesChange={this.saveRadius}
+            onValuesChangeFinish={this.saveRadius}
+            min={500}
+            max={7000}
+            step={1}
+            snapped
+          />
 
-            <Text style={styles.setting}>
-              Rating:  {this.state.minRating} - {this.state.maxRating} Stars
-            </Text>
-            <MultiSlider style={styles.slider}
-              values={this.state.selectedRating}
-              onValuesChange={this.saveRating}
-              onValuesChangeFinish={this.saveRating}
-              min={1}
-              max={5}
-              step={1}
-              allowOverlap
-              snapped
-            /> 
-            <SettingSaveButton clickEvent={() => this.handleHomeClick()}/>
-          </Card>
-        </React.Fragment>
-      )
-    } 
+          <Text style={styles.setting}>
+              Price:  { '$'.repeat(this.state.minPrice) } - { '$'.repeat(this.state.maxPrice) }
+          </Text>
+          <MultiSlider style={styles.slider}
+            values={this.state.selectedPrice}
+            onValuesChange={this.savePrice}
+            onValuesChangeFinish={this.savePrice}
+            min={1}
+            max={4}
+            step={1}
+            allowOverlap
+            snapped
+          />
+
+          <Text style={styles.setting}>
+            Rating:  {this.state.minRating} - {this.state.maxRating} Stars
+          </Text>
+          <MultiSlider style={styles.slider}
+            values={this.state.selectedRating}
+            onValuesChange={this.saveRating}
+            onValuesChangeFinish={this.saveRating}
+            min={1}
+            max={5}
+            step={1}
+            allowOverlap
+            snapped
+          /> 
+          <SettingSaveButton clickEvent={() => this.handleHomeClick()}/>
+        </Card>
+      </React.Fragment>
+    )
+    
     // else if (this.state.goHome) {
     //   content = <LandingPage />
     // }
