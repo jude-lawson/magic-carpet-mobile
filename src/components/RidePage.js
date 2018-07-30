@@ -4,12 +4,16 @@ import { Card } from 'react-native-elements';
 import { encode as btoa, decode as atob } from 'base-64';
 import { WebBrowser, SecureStore } from 'expo';
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
+import JWT from 'expo-jwt';
 
 import LandingPage from './LandingPage';
 import LyftService from '../services/LyftService';
 import HomeButton from './HomeButton';
 import CancelButton from './CancelButton';
 import DestinationButton from './DestinationButton';
+import CancelConfirmationPage from './CancelConfirmationPage'
+import ApiService from './ApiService'
+
 
 export default class RidePage extends Component {
   constructor(props) {
@@ -20,7 +24,8 @@ export default class RidePage extends Component {
       desinationVisible: false,
       goHome: false,
       pickedUp: false,
-      rideStatus: 'Magic Carpet is locating your ride!'
+      rideStatus: 'Magic Carpet is locating your ride!',
+      cancelFee: null,
     }
 
     this.rideStatus()
@@ -31,9 +36,10 @@ export default class RidePage extends Component {
   };
 
   rideStatus() {
-    LyftService.getStatus()
-    .then((response) => response.json())
-    .then((parsedResponse) => {
+    // LyftService.getStatus()
+    // .then((response) => response.json())
+    // .then((parsedResponse) => {
+    let parsedResponse = LyftService.getStatus();
       if (parsedResponse['status'] === 'pending') {
         var timer = setInterval(()=> this.rideStatus(), 15000);
       } else if (parsedResponse['status'] === 'accepted') {
@@ -57,15 +63,24 @@ export default class RidePage extends Component {
         clearInterval(timer);
         this.setState(() => ({
           pickedUp: true
-        }));
+        }))
       }
-    })
+    // })
   }
 
   cancelRide() {
-    this.setState(() => ({
-      rideCancelled: true
-    }));
+    ApiService.goGet('/cancel', 'get', this.props.data.ride_id)
+    .then((response) => response.json())
+    .then((parsedResponse) => {
+      if (parsedResponse['cancel_fee']) {
+        this.setState(() => ({
+          cancelFee: parsedResponse['cancel_fee']
+        }));
+      };
+      this.setState(() => ({
+        rideCancelled: true
+      }));
+    })
   }
 
   revealDestination() {
@@ -82,8 +97,10 @@ export default class RidePage extends Component {
 
   render() {
     let content;
-    if (this.state.goHome || this.state.rideCancelled) {
+    if (this.state.goHome) {
       content = <LandingPage />
+    } else if (this.state.rideCancelled) {
+      content = <CancelConfirmationPage fee={this.state.cancelFee}/>
     } else if (this.state.pickedUp) {
       content = <LandingPage />
     } else if (this.state.destinationVisible) {
