@@ -26,7 +26,7 @@ export default class SettingsPage extends Component {
       minPrice: this.props.settings.min_price,
       maxPrice: this.props.settings.max_price,
       selectedPrice: [this.props.settings.min_price, this.props.settings.max_price],
-      price: this.props.settings.price
+      // price: this.props.settings.price
       // goHome: false
     }
 
