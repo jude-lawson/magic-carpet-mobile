@@ -9,6 +9,8 @@ import HomeButton from './HomeButton';
 import SettingsPage from './SettingsPage';
 import UserAvatar from './UserAvatar';
 import {Location, Permissions} from 'expo';
+import ApiService from './ApiService';
+
 
 
 export default class LandingPage extends Component {
@@ -87,10 +89,11 @@ export default class LandingPage extends Component {
     console.log("in go get adventure")
     let body = await this.setRideSettings()
     console.log(body)
-    return fetch('http://localhost:3000/api/v1/adventures', {
-        method: 'POST',
-        body: body 
-    })
+    return ApiService.createAdventure(body)
+    // return fetch('http://localhost:3000/api/v1/adventures', {
+    //     method: 'POST',
+    //     body: body 
+    // })
   }
 
   async createAdventure() {

@@ -56,17 +56,12 @@ export default class LoginPage extends Component {
     let response = JSON.parse(received)
     if (response.settings){
       let settings = response.settings
-      console.log("response . settings")
-      console.log(settings)
-      console.log(" ")
+ 
       this.setState({
         settings: {
           settings
         }
       })
-      console.log("state settings")
-      console.log(this.state.settings)
-      console.log(" ")
 
     } else {
       throw "error, server side"
@@ -76,7 +71,6 @@ export default class LoginPage extends Component {
   async setUserState(received){
     console.log("within set user state")
     console.log(received)
-    console.log(this.setUserId)
     console.log(" ")
     this.setUserId(received)
     .then(()=>{
