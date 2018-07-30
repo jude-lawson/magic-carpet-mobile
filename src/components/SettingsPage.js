@@ -15,13 +15,16 @@ export default class SettingsPage extends Component {
     this.state = {
       minRadius: this.props.settings.min_radius,
       maxRadius: this.props.settings.max_radius,
-      minRating: this.props.settings.min_rating,
-      max_rating: 5,
-
       selectedRadius: [this.props.settings.min_radius, this.props.settings.max_radius],
-      selectedPrice: this.props.settings.price.split(","),
-      minPrice: this.props.settings.price[0],
-      selectedRating: [2,4],
+
+      minRating: this.props.settings.min_rating,
+      maxRating: this.props.settings.max_rating,
+      selectedRating: [this.props.settings.min_rating, this.props.settings.max_rating],
+
+
+      minPrice: this.props.settings.min_price,
+      maxPrice: this.props.settings.max_price,
+      selectedPrice: [this.props.settings.min_price, this.props.settings.max_price]
       // goHome: false
     }
 
@@ -42,12 +45,13 @@ export default class SettingsPage extends Component {
       min_radius: this.state.minRadius,
       max_radius: this.state.maxRadius,
       min_rating: this.state.minRating,
-      price: this.props.settings.price,
+      max_rating: this.state.maxRating,
+      min_price: this.state.minPrice,
+      max_price: this.state.maxPrice,
     }
   }
 
   saveRadius = (data) => {
-    console.log(data)
     this.setState(() => ({
       minRadius: data[0],
       maxRadius: data[1],
@@ -57,13 +61,18 @@ export default class SettingsPage extends Component {
 
   savePrice = (data) => {
     this.setState(() => ({
-      selectedPrice: data
+      minPrice: data[0],
+      maxPrice: data[1],
+      selectedPrice: [data[0], data[1]]
     }));
+
   }
 
   saveRating = (data) => {
     this.setState(() => ({
-      selectedRating: data
+      minRating: data[0],
+      maxRating: data[1],
+      selectedRating: [data[0], data[1]]
     }));
   }
 
@@ -88,24 +97,25 @@ export default class SettingsPage extends Component {
               min={500}
               max={7000}
               step={1}
-              allowOverlap
               snapped
             />
-            {/* <Text style={styles.setting}>
-                Price:  { '$'.repeat(this.state.minPrice) } - { '$'.repeat(this.state.selectedPrice[3]) }
+  
+            <Text style={styles.setting}>
+                Price:  { '$'.repeat(this.state.minPrice) } - { '$'.repeat(this.state.maxPrice) }
             </Text>
             <MultiSlider style={styles.slider}
               values={this.state.selectedPrice}
               onValuesChange={this.savePrice}
               onValuesChangeFinish={this.savePrice}
-              min={500}
-              max={7000}
+              min={1}
+              max={4}
               step={1}
               allowOverlap
               snapped
             />
+
             <Text style={styles.setting}>
-              Minimum Rating:  {this.state.minRating} Stars
+              Rating:  {this.state.minRating} - {this.state.maxRating} Stars
             </Text>
             <MultiSlider style={styles.slider}
               values={this.state.selectedRating}
@@ -116,7 +126,7 @@ export default class SettingsPage extends Component {
               step={1}
               allowOverlap
               snapped
-            /> */}
+            /> 
             <SettingSaveButton clickEvent={() => this.handleHomeClick()}/>
           </Card>
         </React.Fragment>

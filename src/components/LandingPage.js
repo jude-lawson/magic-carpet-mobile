@@ -8,6 +8,8 @@ import EstimatePage from './EstimatePage';
 import HomeButton from './HomeButton';
 import SettingsPage from './SettingsPage';
 import UserAvatar from './UserAvatar';
+import {Location, Permissions} from 'expo';
+
 
 export default class LandingPage extends Component {
   constructor(props) {
@@ -34,27 +36,55 @@ export default class LandingPage extends Component {
   //           openSettings:false})
   //   )
   // }
+  _getLocationAsync = async () => {
+    // let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    // if (status !== 'granted') {
+    //   this.setState({
+    //     errorMessage: 'Permission to access location was denied',
+    //   });
+    // }
+
+    // let location = await Location.getCurrentPositionAsync({});
+    // this.setState({ location });
+    return {latitude: 39.7293530 , longitude: -104.9844910}
+  };
 
   createAdventure() {
-    fetch('http://localhost:3000/api/v1/adventures', {
-      method: 'POST',
-      body: JSON.stringify({
-        preferences: {
-        "open_now": true,
-        "radius": 1000,
-        "latitude": 39.7293,
-        "longitude": -104.9844,
-        "price": "1,2,3",
-        "term": "restaurants"
-        }
+    console.log(this.state.max_radius)
+    this._getLocationAsync({})
+    .then((location)=>{
+      console.log(location)
+      this.setState(()=>({
+        location: location
+      }))
+    })
+    .then(()=>{
+      fetch('http://localhost:3000/api/v1/adventures', {
+        method: 'POST',
+        body: JSON.stringify({
+          search_settings: {
+            "open_now": true,
+            "radius": this.state.max_radius,
+            "latitude": this.state.location.latitude,
+            "longitude": this.state.location.longitude,
+            "max_price": this.state.max_price,
+            "min_price": this.state.min_price,
+            "price": "1,2,3",
+            "term": "restaurants"
+            },
+          restrictions: {
+            categories:[],
+            min_radius: this.state.min_radius
+          }
+        })
       })
     })
-     .then((response) => response.json())
-     .then((parsedResponse) => {
-       this.setState(() => ({
-         rideCalled: true,
-         content: parsedResponse.destination
-       }))
+    .then((response) => response.json())
+    .then((parsedResponse) => {
+      this.setState(() => ({
+        rideCalled: true,
+        content: parsedResponse.destination
+      }))
      })
      .catch((error) => {
        console.error(error);
