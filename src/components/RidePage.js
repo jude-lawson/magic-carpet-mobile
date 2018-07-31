@@ -20,12 +20,12 @@ export default class RidePage extends Component {
     super(props);
 
     this.state = {
-      rideCancelled: false,
       desinationVisible: false,
       goHome: false,
       pickedUp: false,
       rideStatus: 'Magic Carpet is locating your ride!',
       cancelFee: false,
+      costToken: null
     }
 
     this.rideStatus()
@@ -69,17 +69,16 @@ export default class RidePage extends Component {
   }
 
   cancelRide() {
-    ApiService.goGet('cancel', 'get', this.props.ride_id)
+    let lyft_token = SecureStore.getItemAsync('lyft_token').catch(() => console.log('no token!'));
+    ApiService.goGet('cancel', 'get', {ride_id: this.props.ride_id, lyft_token: lyft_token})
     .then((response) => response.json())
     .then((parsedResponse) => {
       if (parsedResponse['error'] === 'cancel_confirmation_required') {
         this.setState(() => ({
-          cancelFee: parsedResponse['amount']
+          cancelFee: parsedResponse['amount'],
+          costToken: parsedResponse['token']
         }));
       };
-      this.setState(() => ({
-        rideCancelled: true
-      }));
     })
   }
 
@@ -99,8 +98,8 @@ export default class RidePage extends Component {
     let content;
     if (this.state.goHome) {
       content = <LandingPage />
-    } else if (this.state.rideCancelled) {
-      content = <CancelConfirmationPage fee={this.state.cancelFee}/>
+    } else if (this.state.cancelFee) {
+      content = <CancelConfirmationPage fee={this.state.cancelFee} token={this.state.costToken}/>
     } else if (this.state.pickedUp) {
       content = <LandingPage />
     } else if (this.state.destinationVisible) {

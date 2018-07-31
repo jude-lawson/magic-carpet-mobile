@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SecureStore } from 'expo';
 import { Card, Button, Text } from 'react-native-elements';
 
 import LandingPage from './LandingPage';
@@ -15,6 +16,8 @@ export default class CancelConfirmationPage extends Component {
       confirmed: false,
       feePrompt: null
     }
+
+    this.checkForFee()
 
     this.checkForFee = this.checkForFee.bind(this)
     this.handleConfirmation = this.handleConfirmation.bind(this)
@@ -39,11 +42,15 @@ export default class CancelConfirmationPage extends Component {
   }
 
   handleConfirmation() {
-    ApiService.goGet('cancel', 'delete', { ride_id: this.props.rideId, cost_toke: this.props.costToken })
+    let lyft_token = SecureStore.getItemAsync('lyft_token').catch(() => console.log('no token!'));
+    ApiService.goGet('cancel', 'delete', { ride_id: this.props.rideId, cost_token: this.props.costToken, lyft_token: lyft_token })
     .then((response) => response.json())
     .then((parsedResponse) => {
       console.log(parsedResponse);
-    })
+    });
+    this.setState(() => ({
+      confirmed: 'confirmed'
+    }));
   }
 
   handleDecline() {
