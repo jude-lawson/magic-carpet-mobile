@@ -24,15 +24,19 @@ class ApiService {
     let headers = await this.getInfo()
     return this.goGet('adventures', 'post', headers, settings)
   }
-  static acceptEstimate(adventureInfo){
-    return this.goGet('rides', 'post', adventureInfo)
+
+  static async createRide(rideInfo) {
+    return await ApiService.getInfo()
+    .then(
+      (userInfo) => {
+        this.goGet('rides', 'post', userInfo , rideInfo)
+    })
   }
 
   static async getInfo(){
     const token = await SecureStore.getItemAsync('lyft_token')
     const refresh_token = await SecureStore.getItemAsync('lyft_refresh_token')
     if (SecureStore.getItemAsync('id')) {
-      console.log("id found")
       const id = await SecureStore.getItemAsync('id')
       return { token: token, refresh_token: refresh_token, id: id}
     } else {
@@ -44,7 +48,6 @@ class ApiService {
     return await this.goGet('users', 'post', user_info)
   }
 
-  //
 
   static async goGet(url_extension, method, headers=null, body=null){
 

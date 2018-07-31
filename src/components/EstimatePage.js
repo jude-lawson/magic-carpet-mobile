@@ -5,6 +5,7 @@ import { Card, Button, Text } from 'react-native-elements';
 import LandingPage from './LandingPage';
 import HomeButton from './HomeButton';
 import RidePage from './RidePage';
+import ApiService from './ApiService';
 
 export default class EstimatePage extends Component {
   constructor(props) {
@@ -20,14 +21,25 @@ export default class EstimatePage extends Component {
   }
 
   handleConfirmation() {
-    origin = Geolocation.getCurrentPosition(geo_success);
-    let lyft_token = SecureStore.getItemAsync('lyft_token').catch(() => console.log('no token!'));
-    if (this.props.costToken)
-      ApiService.goGet('rides', 'post', { origin: origin, destination: this.props.destination, lyft_token: lyft_token, cost_token: this.props.costToken})
-      .then((response) => response.json())
-    else {
-      ApiService.goGet('rides', 'post', { origin: origin, destination: this.props.destination, lyft_token: lyft_token })
-      .then((response) => response.json())
+    let origin = {latitude: this.props.lat, longitude: this.props.long};
+    let destination = {latitude: this.props.data.latitude, longitude: this.props.data.longitude}
+    if (this.props.costToken) {
+      let costToken = this.props.costToken;
+      ApiService.createRide({ origin, destination, cost_token })
+      .then(
+        (response) => response.json()
+      )
+    } else {
+      ApiService.createRide({ origin: origin, destination: destination })
+      .then(
+        (response) => {
+          console.log('RIDE ID');
+          console.log(response)
+          response.json()
+        })
+      .then(
+        (parsedResponse) => {
+        })
     }
     this.setState(() => ({
       confirmed: 'confirmed'
@@ -46,7 +58,7 @@ export default class EstimatePage extends Component {
     }));
   }
 
-  displayRange(min, max){
+  displayRange(min, max) {
     var numbers = []
     console.log(min)
     console.log(max)
@@ -57,8 +69,9 @@ export default class EstimatePage extends Component {
   }
 
   render() {
+    console.log(this.props.price_range);
     let content;
-    let range = this.displayRange(this.props.price_range.min_cost, this.props.price_range.max_cost,)
+    let range = this.displayRange(this.props.price_range.min_cost, this.props.price_range.max_cost)
     if (!this.state.confirmed) {
       content = (
         <React.Fragment>

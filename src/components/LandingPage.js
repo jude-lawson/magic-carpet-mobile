@@ -19,12 +19,8 @@ export default class LandingPage extends Component {
     this.state = {
       content: 'This is the current body',
       rideCalled: false,
-<<<<<<< HEAD
-      openSettings: false
-=======
       openSettings: false,
       settings: this.props.settings
->>>>>>> 3ee3606b2d3efbe941e110b168b2e8f3004fbc13
     }
     console.log(' ')
     console.log("landing page props")
@@ -37,17 +33,6 @@ export default class LandingPage extends Component {
     this.goGetAdventure = this.goGetAdventure.bind(this)
   }
 
-<<<<<<< HEAD
-  componentWillMount() {
-    Geolocation.requestAuthorization();
-  }
-
-  createAdventure() {
-    fetch('http://localhost:3000/api/v1/adventures', {
-      method: 'POST',
-      body: JSON.stringify({
-        preferences: {
-=======
   // setSettings(settings){
   //   this.setState(
   //     ()=>({settings: settings,
@@ -67,7 +52,7 @@ export default class LandingPage extends Component {
       this.setState({ location });
     } else {
       this.setState(() => ({
-        
+
           longitude: -104.984491000,
           latitude: 39.729353000
 
@@ -80,7 +65,6 @@ export default class LandingPage extends Component {
     console.log(this.state)
     return JSON.stringify({
       search_settings: {
->>>>>>> 3ee3606b2d3efbe941e110b168b2e8f3004fbc13
         "open_now": true,
         "radius": this.state.settings.max_radius,
         "latitude": await this.state.latitude,
@@ -108,7 +92,7 @@ export default class LandingPage extends Component {
     return ApiService.createAdventure(body)
     // return fetch('http://localhost:3000/api/v1/adventures', {
     //     method: 'POST',
-    //     body: body 
+    //     body: body
     // })
   }
 
@@ -127,9 +111,11 @@ export default class LandingPage extends Component {
         return response.json()
       })
       .then((parsedResponse) => {
+        console.log('TOKEN!!!');
+        console.log(parsedResponse);
         this.setState(() => ({
           rideCalled: true,
-          content: parsedResponse.destination, 
+          content: parsedResponse.destination,
           price_range: parsedResponse.price_range
         }))
       })
@@ -175,9 +161,10 @@ export default class LandingPage extends Component {
         </React.Fragment>
       );
     } else if (this.state.rideCalled) {
+      console.log('STATE OF LANDING PAGE')
       console.log(this.state)
       console.log(this.state.price_range)
-      pageContent = <EstimatePage price_range={this.state.price_range} data={this.state.content} />
+      pageContent = <EstimatePage price_range={this.state.price_range} data={this.state.content} lat={this.state.latitude}  long={this.state.longitude}/>
     } else if (this.state.openSettings) {
       pageContent = <SettingsPage settings={this.state.settings} saveSettings={this.saveSettings}/>
     }

@@ -19,8 +19,7 @@ export default class RidePage extends Component {
       rideCancelled: false,
       desinationVisible: false,
       goHome: false,
-      pickedUp: false,
-      rideStatus: 'Magic Carpet is locating your ride!'
+      pickedUp: false
     }
 
     this.rideStatus()
@@ -32,8 +31,14 @@ export default class RidePage extends Component {
 
   rideStatus() {
     LyftService.getStatus()
-    .then((response) => response.json())
-    .then((parsedResponse) => {
+    .then(
+      (response) => {
+        response.json()
+      }
+    )
+    .then(
+      (parsedResponse) => {
+
       if (parsedResponse['status'] === 'pending') {
         var timer = setInterval(()=> this.rideStatus(), 15000);
       } else if (parsedResponse['status'] === 'accepted') {
