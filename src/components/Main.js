@@ -13,19 +13,19 @@ export default class Main extends Component {
     super()
 
     this.state = {
-      // isLoggedIn: false,
-      // settings: null
+      isLoggedIn: false,
+      settings: null
 
       // The settings below are only for skipping login
-      isLoggedIn: true,
-      settings: {
-        max_price: 4,
-        max_radius: 4000,
-        max_rating: 5,
-        min_price: 1,
-        min_radius: 1000,
-        min_rating: 0,
-      }
+      // isLoggedIn: true,
+      // settings: {
+      //   max_price: 4,
+      //   max_radius: 4000,
+      //   max_rating: 5,
+      //   min_price: 1,
+      //   min_radius: 1000,
+      //   min_rating: 0,
+      // }
     }
 
     this.handleCallback = this.handleCallback.bind(this)

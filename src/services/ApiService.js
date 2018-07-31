@@ -58,7 +58,7 @@ class ApiService {
     let response = await ApiService.goGet('adventures', 'post', headers, ApiService.rideSettings(location, currentState))
     // Parse response
     let responseBody = await response.json()
-    
+    return responseBody
   }
 
   static acceptEstimate(adventureInfo){
