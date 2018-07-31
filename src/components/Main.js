@@ -64,7 +64,7 @@ export default class Main extends Component {
       )
     } else if (this.state.isLoggedIn) {
       return (
-       <Home settings={this.state.settings} />
+        <Home settings={this.state.settings} />
       )
     }
   }
