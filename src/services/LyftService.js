@@ -1,9 +1,9 @@
 import { SecureStore } from 'expo';
-import ApiService from '../components/ApiService';
+import ApiService from './ApiService';
 
 class LyftService {
-  static authorize(auth_code, enc_client_auth) {
-    return fetch('https://api.lyft.com/oauth/token', {
+  static async authorize(auth_code, enc_client_auth) {
+    return await fetch('https://api.lyft.com/oauth/token', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
@@ -14,6 +14,21 @@ class LyftService {
         "code": auth_code
       })
     })
+  }
+
+  static async isAuthorized(auth_code, enc_client_auth) {
+    return await LyftService.authorize(auth_code, enc_client_auth)
+                  .then((response) => response.json())
+                  .then((parsedResponse) => {
+                    console.log('In main parsed response blergh')
+                    if (parsedResponse.access_token) {
+                      SecureStore.setItemAsync('access_token', parsedResponse.access_token)
+                      SecureStore.setItemAsync('refresh_token', parsedResponse.refresh_token)
+                      return true
+                    } else {
+                      return false
+                    }
+                  })
   }
 
   static getStatus() {

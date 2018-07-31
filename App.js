@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import LoginPage from './src/components/LoginPage'
+// import LoginPage from './src/components/LoginPage'
+import Main from './src/components/Main'
 import Gradient from './src/components/Gradient'
 
 export default class App extends Component {
@@ -9,7 +10,8 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <Gradient />
-        <LoginPage />
+        {/* <LoginPage /> */}
+        <Main />
       </View>
     );
   }

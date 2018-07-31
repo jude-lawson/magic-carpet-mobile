@@ -1,6 +1,6 @@
 // import JWT from 'expo-jwt'
 import { SecureStore } from 'expo';
-import { handshake, host_url, api_version } from '../../config'
+import { handshake, host_url, api_version, default_origin_latitude, default_origin_longitude } from '../../config'
 
 class ApiService {
 
@@ -14,16 +14,53 @@ class ApiService {
     return payload
   }
 
-  // static getFromKeychain(key){
-  //   SecureStore.getItemAsync(key)
-  //     .then((response) => {return response})
-  //     .catch((error)=>console.log(error))
-  // }
-
-  static async createAdventure(settings){
-    let headers = await this.getInfo()
-    return this.goGet('adventures', 'post', headers, settings)
+  static rideSettings(location, currentState) {
+    return JSON.stringify({
+      search_settings: {
+        "open_now": true,
+        "radius": currentState.radius[1],
+        "latitude": location.latitude,
+        "longitude":location.longitude,
+        "max_price": currentState.price[1],
+        "min_price": currentState.price[0],
+        "price": `${currentState.price[0]},${currentState.price[1]}`,
+        "term": "restaurants"
+        },
+      restrictions: {
+        max_rating: currentState.rating[1],
+        min_rating: currentState.rating[0],
+        categories:[],
+        min_radius: currentState.radius[0]
+      }
+    })
   }
+
+  static async createAdventure(currentState) {
+    // Get the location
+    if (Expo.Constants.isDevice) {
+      console.log('Is a real device.')
+      let { status } = await PermissionRequest.askAsync(Permissions.LOCATION)
+      if (status !== 'granted') {
+        this.setState({ error: 'Permission to access location was denied' })
+      }
+      
+      var location = await Location.getCurrentPositionAsync({})
+    } else {
+      var location = ({
+        latitude: default_origin_latitude,
+        longitude: default_origin_longitude
+      })
+    }
+
+    // Get user info from SecureStore
+    let headers = await ApiService.getInfo()
+    // Post to API to createAdventure
+    let response = await ApiService.goGet('adventures', 'post', headers, ApiService.rideSettings(location, currentState))
+    // Parse response
+    let responseBody = await response.json()
+    return responseBody
+  }
+
   static acceptEstimate(adventureInfo){
     return this.goGet('rides', 'post', adventureInfo)
   }
@@ -40,8 +77,11 @@ class ApiService {
     }
   }
 
-  static async createUser(user_info = null){
-    return await this.goGet('users', 'post', user_info)
+  static async createUser() {
+    let user_info = await ApiService.getInfo()
+    let server_response = await this.goGet('users', 'post', user_info)
+    let settings = await ApiService.decodeJwt(server_response.headers.map.authorization)
+    return JSON.parse(settings)
   }
 
   //

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
 
-export default class SettingSaveButton extends Component {
+export default class SettingsSaveButton extends Component {
   constructor(props) {
     super(props);
 
@@ -15,7 +15,7 @@ export default class SettingSaveButton extends Component {
         }}
         backgroundColor='#7998fe'
         title='SAVE'
-        onPress={this.props.clickEvent}
+        onPress={this.props.handleClick}
       />
     );
   }
