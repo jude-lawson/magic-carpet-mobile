@@ -46,8 +46,19 @@ export default class EstimatePage extends Component {
     }));
   }
 
+  displayRange(min, max){
+    var numbers = []
+    console.log(min)
+    console.log(max)
+    numbers.push(min/100)
+    numbers.push(max/100)
+
+    return numbers.join(' - ')
+  }
+
   render() {
     let content;
+    let range = this.displayRange(this.props.price_range.min_cost, this.props.price_range.max_cost,)
     if (!this.state.confirmed) {
       content = (
         <React.Fragment>
@@ -56,7 +67,7 @@ export default class EstimatePage extends Component {
           containerStyle={styles.cardStyle}
           wrapperStyle={{ height: 20 }}
           title='Confirm Your Price'>
-            <Text style={styles.textStyle}>This ride will cost: {this.props.price}</Text>
+            <Text style={styles.textStyle}>This ride will cost: {range}$ </Text>
             <Text style={styles.textStyle}>Does this work for you?</Text>
           </Card>
           <View style={styles.buttonContainer}>

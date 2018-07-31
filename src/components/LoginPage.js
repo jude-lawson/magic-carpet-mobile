@@ -20,7 +20,9 @@ export default class LoginPage extends Component {
     }
 
     this.handleCallback = this.handleCallback.bind(this)
-    this.setUserId = this.setUserId.bind(this)
+    // this.setUserId = this.setUserId.bind(this)
+    this.setUserSettings = this.setUserSettings.bind(this)
+    this.setUserState = this.setUserState.bind(this)
   };
 
   openURL = async (url) => {
@@ -49,17 +51,45 @@ export default class LoginPage extends Component {
     await SecureStore.setItemAsync('lyft_refresh_token', refresh_token)
   }
 
+  async setUserSettings(received){
+    let response = JSON.parse(received)
+    if (response.settings){
+      let settings = response.settings
+ 
+      this.setState({
+        settings: {
+          settings
+        }
+      })
 
-  setUserId(received){
+    } else {
+      throw "error, server side"
+    }
+  }
+
+  async setUserState(received){
+    console.log("within set user state")
+    console.log(received)
+    console.log(this.setUserId)
+    console.log(" ")
+    this.setUserId(received)
+    .then(()=>{
+      this.setUserSettings(received)
+    })
+    .then(()=> {this.setState(() =>
+      ({
+        loggedIn: true
+      }))
+    })
+    .catch((error)=>console.log(error))
+  }
+
+
+  async setUserId(received){
     let response = JSON.parse(received)
     if (response["id"]){
       let id = response.id.toString()
       SecureStore.setItemAsync('id', id)
-      .then(
-        ()=> {this.setState(() => ({
-          loggedIn: true
-        }))
-      })
       .catch(
         (error)=>console.log(error)
       );
@@ -78,7 +108,7 @@ export default class LoginPage extends Component {
       if (auth_code === 'access_denied') {
         return
       } else {
-
+ 
         this.setTokensKeychain(parsedResponse['access_token'], parsedResponse['refresh_token'])
         .then(()=>{
 
@@ -92,7 +122,9 @@ export default class LoginPage extends Component {
               ApiService.decodeJwt(response.headers.map.authorization)
               .then((response)=>{
                 console.log(response)
-                this.setUserId(response)
+                this.setUserState(response)
+                .then(()=>console.log("state settings"),console.log(this.state.settings))
+
               })
               .catch((error)=>console.log(error))
               })
@@ -113,7 +145,8 @@ export default class LoginPage extends Component {
   render() {
     let page;
     if (this.state.loggedIn) {
-      page = <LandingPage />
+      console.log(this.state.settings)
+      page = <LandingPage settings = {this.state.settings.settings}/>
     } else {
       console.log("Login Button (1)")
       console.log(" ")
