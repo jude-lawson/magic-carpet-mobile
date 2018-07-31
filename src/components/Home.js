@@ -5,7 +5,7 @@ import SettingsButton from './SettingsButton'
 import Settings from './Settings'
 import MagicCarpetButton from './MagicCarpetButton'
 import ErrorMessage from './ErrorMessage'
-import { default_origin_latitude, default_origin_longitude } from '../../config'
+import ApiService from '../services/ApiService';
 
 export default class Home extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ export default class Home extends Component {
     this.saveRadius = this.saveRadius.bind(this)
     this.savePrice = this.savePrice.bind(this)
     this.saveRating = this.saveRating.bind(this)
-    this.createAdventure = this.createAdventure.bind(this)
+    this.handleMagicClick = this.handleMagicClick.bind(this)
   }
 
   handleHomeClick() {
@@ -47,28 +47,9 @@ export default class Home extends Component {
     this.setState({ rating: [data[0], data[1]] })
   }
 
-  async getLocation() {
-    if (Expo.Constants.isDevice) {
-      let { status } = await PermissionRequest.askAsync(Permissions.LOCATION)
-      if (status !== 'granted') {
-        this.setState({ error: 'Permission to access location was denied' })
-      }
-      
-      return await Location.getCurrentPositionAsync({})
-    } else {
-      return ({
-        latitude: default_origin_latitude,
-        longitude: default_origin_longitude
-      })
-    }
-  }
+  handleMagicClick() {
+    ApiService.createAdventure(this.state)
 
-  createAdventure() {
-    console.log('Creating adventure!')
-    // Get the location
-    // ?? Set Location in state ??
-    // 
-    console.log('Adventure is created!')
   }
 
   render() {
@@ -87,14 +68,16 @@ export default class Home extends Component {
           handleSaveClick={this.toggleSettings} />
       )
     } else if (!this.state.settingsOpen) {
-      content = <MagicCarpetButton handleClick={this.createAdventure}/>
+      content = <MagicCarpetButton handleClick={this.handleMagicClick}/>
     } else if (!this.state.settingsOpen && this.state.error) {
       content = (
         <React.Fragment>
           <ErrorMessage message={this.state.error} />
-          <MagicCarpetButton handleClick={this.createAdventure} />
+          <MagicCarpetButton handleClick={this.handleMagicClick} />
         </React.Fragment>
       )
+    } else if (!this.state.settingsOpen && this.adventureCreated) {
+      content = <Estimate />
     }
 
     return (
