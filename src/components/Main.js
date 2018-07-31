@@ -20,16 +20,12 @@ export default class Main extends Component {
       // The settings below are only for skipping login
       isLoggedIn: true,
       settings: {
-        id: 17,
-        ride_count: 0,
-        settings: {
-          max_price: 4,
-          max_radius: 4000,
-          max_rating: 5,
-          min_price: 1,
-          min_radius: 1000,
-          min_rating: 0,
-        },
+        max_price: 4,
+        max_radius: 4000,
+        max_rating: 5,
+        min_price: 1,
+        min_radius: 1000,
+        min_rating: 0,
       }
     }
 

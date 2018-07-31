@@ -30,7 +30,7 @@ export default class Home extends Component {
     let content;
 
     if (this.state.settingsOpen) {
-      content = <Settings />
+      content = <Settings settings={this.state.settings} />
     }
 
     return (
