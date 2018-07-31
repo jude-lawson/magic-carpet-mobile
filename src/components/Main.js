@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { Text } from 'react-native-elements'
 import { WebBrowser, Linking } from 'expo'
-import { encode as btoa, decode as atob } from 'base-64'
+import { encode as btoa } from 'base-64'
 
 import { lyft_client_id, lyft_client_secret } from '../../config'
 import LyftService from '../services/LyftService'
-import ApiService from './ApiService'
+import ApiService from '../services/ApiService'
 import Home from './Home'
 import Login from './Login'
 
@@ -45,7 +44,7 @@ export default class Main extends Component {
         if (access) {
           ApiService.createUser().then((settings_from_server) => {
             console.log(settings_from_server)
-            this.setState({ isLoggedIn: true, settings: settings_from_server })
+            this.setState({ isLoggedIn: true, settings: settings_from_server.settings })
           })
         }
         

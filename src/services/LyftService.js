@@ -1,5 +1,5 @@
 import { SecureStore } from 'expo';
-import ApiService from '../components/ApiService';
+import ApiService from './ApiService';
 
 class LyftService {
   static async authorize(auth_code, enc_client_auth) {
