@@ -40,8 +40,11 @@ class ApiService {
     }
   }
 
-  static async createUser(user_info = null){
-    return await this.goGet('users', 'post', user_info)
+  static async createUser() {
+    let user_info = await ApiService.getInfo()
+    let server_response = await this.goGet('users', 'post', user_info)
+    let settings = await ApiService.decodeJwt(server_response.headers.map.authorization)
+    return JSON.parse(settings)
   }
 
   //
