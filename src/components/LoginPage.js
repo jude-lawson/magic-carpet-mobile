@@ -15,7 +15,7 @@ export default class LoginPage extends Component {
     super(props);
 
     this.state = {
-      loggedIn: true,
+      loggedIn: false,
       result: null
     }
 
@@ -33,7 +33,6 @@ export default class LoginPage extends Component {
     .then((result)=> {
     })
   };
-    // .catc((error)=>console.log(error))
 
     // let result = await AuthSession.startAsync({
     //   authUrl: url
@@ -70,7 +69,6 @@ export default class LoginPage extends Component {
   }
 
   handleCallback(event) {
-
     const auth_code = event.url.split('?')[1].split('&')[0].split('=')[1]
     const enc_client_auth = btoa(`${lyft_client_id}:${lyft_client_secret}`)
 
@@ -90,6 +88,7 @@ export default class LoginPage extends Component {
 
             ApiService.createUser(payload_data)
             .then((response)=>{
+              console.log('here');
               ApiService.decodeJwt(response.headers.map.authorization)
               .then((response)=>{
                 console.log(response)

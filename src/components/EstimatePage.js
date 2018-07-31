@@ -11,7 +11,7 @@ export default class EstimatePage extends Component {
     super(props);
 
     this.state = {
-      confirmed: false
+      confirmed: false,
     }
 
     this.handleConfirmation = this.handleConfirmation.bind(this)
@@ -20,6 +20,15 @@ export default class EstimatePage extends Component {
   }
 
   handleConfirmation() {
+    origin = Geolocation.getCurrentPosition(geo_success);
+    let lyft_token = SecureStore.getItemAsync('lyft_token').catch(() => console.log('no token!'));
+    if (this.props.costToken)
+      ApiService.goGet('rides', 'post', { origin: origin, destination: this.props.destination, lyft_token: lyft_token, cost_token: this.props.costToken})
+      .then((response) => response.json())
+    else {
+      ApiService.goGet('rides', 'post', { origin: origin, destination: this.props.destination, lyft_token: lyft_token })
+      .then((response) => response.json())
+    }
     this.setState(() => ({
       confirmed: 'confirmed'
     }));

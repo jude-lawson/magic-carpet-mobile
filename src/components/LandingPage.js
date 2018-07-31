@@ -14,13 +14,17 @@ export default class LandingPage extends Component {
     super(props);
     this.state = {
       content: 'This is the current body',
-      rideCalled: true,
+      rideCalled: false,
       openSettings: false
     }
 
     this.createAdventure = this.createAdventure.bind(this)
     this.handleHomeClick = this.handleHomeClick.bind(this)
     this.renderSettingsPage = this.renderSettingsPage.bind(this)
+  }
+
+  componentWillMount() {
+    Geolocation.requestAuthorization();
   }
 
   createAdventure() {
