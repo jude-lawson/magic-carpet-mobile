@@ -3,32 +3,11 @@ import { StyleSheet } from 'react-native'
 import { Card, Text } from 'react-native-elements'
 
 import SettingsSlider from './SettingsSlider'
+import SettingsSaveButton from './SettingsSaveButton'
 
 export default class Settings extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      radius: [props.settings.min_radius, props.settings.max_radius],
-      price: [props.settings.min_price, props.settings.max_price],
-      rating: [props.settings.min_rating, props.settings.max_rating]
-    }
-
-    this.saveRadius = this.saveRadius.bind(this)
-    this.savePrice = this.savePrice.bind(this)
-    this.saveRating = this.saveRating.bind(this)
-  }
-
-  saveRadius(data) {
-    this.setState({ radius: [data[0], data[1]] })
-  }
-
-  savePrice(data) {
-    this.setState({ price: [data[0], data[1]] })
-  }
-  
-  saveRating(data) {
-    this.setState({ rating: [data[0], data[1]] })
   }
 
   render() {
@@ -38,34 +17,36 @@ export default class Settings extends Component {
   
         <SettingsSlider 
           name="Radius"
-          min={this.state.radius[0]} 
-          max={this.state.radius[1]} 
+          min={this.props.currentRadius[0]} 
+          max={this.props.currentRadius[1]} 
           additional="Meters" 
-          values={this.state.radius}
-          onValuesChange={this.saveRadius}
-          onValuesChangeFinish={this.saveRadius}
+          values={[this.props.currentRadius[0], this.props.currentRadius[1]]}
+          onValuesChange={this.props.handleSaveRadius}
+          onValuesChangeFinish={this.props.handleSaveRadius}
           maximum={7000}
           minimum={500} />
 
           <SettingsSlider 
           name="Price"
-          min={'$'.repeat(this.state.price[0])} 
-          max={'$'.repeat(this.state.price[1])} 
-          values={this.state.price}
-          onValuesChange={this.savePrice}
-          onValuesChangeFinish={this.savePrice}
+          min={'$'.repeat(this.props.currentPrice[0])} 
+          max={'$'.repeat(this.props.currentPrice[1])} 
+          values={[this.props.currentPrice[0], this.props.currentPrice[1]]}
+          onValuesChange={this.props.handleSavePrice}
+          onValuesChangeFinish={this.props.handleSavePrice}
           maximum={4}
           minimum={1} />
 
           <SettingsSlider 
           name="Rating"
-          min={this.state.rating[0]} 
-          max={this.state.rating[1]} 
-          values={this.state.rating}
-          onValuesChange={this.saveRating}
-          onValuesChangeFinish={this.saveRating}
+          min={this.props.currentRating[0]} 
+          max={this.props.currentRating[1]} 
+          values={[this.props.currentRating[0], this.props.currentRating[1]]}
+          onValuesChange={this.props.handleSaveRating}
+          onValuesChangeFinish={this.props.handleSaveRating}
           maximum={4}
           minimum={1} />
+
+          <SettingsSaveButton handleClick={this.props.handleSaveClick}/>
 
       </Card>
     );
