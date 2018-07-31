@@ -18,7 +18,7 @@ export default class MagicCarpetButton extends Component {
           width: 200
         }}
         containerViewStyle={{ borderRadius: 50 }}
-        onPress={this.props.clickEvent} />
+        onPress={this.props.handleClick} />
     );
   }
 }
