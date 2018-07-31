@@ -29,18 +29,7 @@ export default class Settings extends Component {
     return(
       <Card wrapperStyle={{ width: 300 }} >
         <Text style={styles.settingsHeading}>Settings</Text>
-        {/* <Text style={styles.setting}>
-            Radius:  {this.state.settings.radius[0]} - {this.state.settings.radius[1]} Meters
-        </Text>
-        <MultiSlider style={styles.slider}
-          values={this.state.settings.radius}
-          onValuesChange={this.saveRadius}
-          onValuesChangeFinish={this.saveRadius}
-          min={500}
-          max={7000}
-          step={1}
-          snapped
-        /> */}
+  
         <SettingsSlider 
           name="Radius"
           min={this.state.settings.radius[0]} 
@@ -52,15 +41,6 @@ export default class Settings extends Component {
           maximum={7000}
           minimum={500} />
 
-        {/* 
-          onValuesChange
-          onValuesChangeFinish
-          min
-          max
-          name
-          settings
-
-         */}
       </Card>
     );
   }
