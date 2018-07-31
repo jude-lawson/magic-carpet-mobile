@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Text } from 'react-native-elements'
+import HomeButton from './HomeButton'
 
 export default class Home extends Component {
   constructor(props) {
@@ -12,8 +12,11 @@ export default class Home extends Component {
   }
 
   render() {
+
     return (
-      <Text>This is the Home Page</Text>
+      <HomeButton />
+      // Settings button
+      // Magic Carpet Button
     );
   }
 }

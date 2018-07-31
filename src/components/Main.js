@@ -14,8 +14,23 @@ export default class Main extends Component {
     super()
 
     this.state = {
-      isLoggedIn: false,
-      settings: null
+      // isLoggedIn: false,
+      // settings: null
+
+      // The settings below are only for skipping login
+      isLoggedIn: true,
+      settings: {
+        id: 17,
+        ride_count: 0,
+        settings: {
+          max_price: 4,
+          max_radius: 4000,
+          max_rating: 5,
+          min_price: 1,
+          min_radius: 1000,
+          min_rating: 0,
+        },
+      }
     }
 
     this.handleCallback = this.handleCallback.bind(this)
@@ -33,6 +48,7 @@ export default class Main extends Component {
       .then((access) => {
         if (access) {
           ApiService.createUser().then((settings_from_server) => {
+            console.log(settings_from_server)
             this.setState({ isLoggedIn: true, settings: settings_from_server })
           })
         }
@@ -48,7 +64,7 @@ export default class Main extends Component {
       )
     } else if (this.state.isLoggedIn) {
       return (
-       <Home />
+       <Home settings={this.state.settings} />
       )
     }
   }
