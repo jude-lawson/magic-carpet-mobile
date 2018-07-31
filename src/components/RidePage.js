@@ -25,7 +25,7 @@ export default class RidePage extends Component {
       goHome: false,
       pickedUp: false,
       rideStatus: 'Magic Carpet is locating your ride!',
-      cancelFee: null,
+      cancelFee: false,
     }
 
     this.rideStatus()
@@ -69,12 +69,12 @@ export default class RidePage extends Component {
   }
 
   cancelRide() {
-    ApiService.goGet('/cancel', 'get', this.props.data.ride_id)
+    ApiService.goGet('cancel', 'get', this.props.ride_id)
     .then((response) => response.json())
     .then((parsedResponse) => {
-      if (parsedResponse['cancel_fee']) {
+      if (parsedResponse['error'] === 'cancel_confirmation_required') {
         this.setState(() => ({
-          cancelFee: parsedResponse['cancel_fee']
+          cancelFee: parsedResponse['amount']
         }));
       };
       this.setState(() => ({

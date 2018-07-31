@@ -7,51 +7,39 @@ import HomeButton from './HomeButton';
 import RidePage from './RidePage';
 import ApiService from './ApiService';
 
-export default class CancelConfirmationPage extends Component {
+export default class PrimeTimePage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       confirmed: false,
-      feePrompt: null
     }
 
-    this.checkForFee = this.checkForFee.bind(this)
     this.handleConfirmation = this.handleConfirmation.bind(this)
     this.handleDecline = this.handleDecline.bind(this)
     this.handleHomeClick = this.handleHomeClick.bind(this)
   }
 
-  checkForFee() {
-    if (this.props.fee) {
-      console.log('fee');
-      let formattedFee = (this.props.fee / 100).toFixed(2);
-      this.setState(() => ({
-        feePrompt: `Cancelling now will result in a cancellation fee of $${formattedFee}.`
-      }));
-      console.log(this.state.feePrompt);
-    } else {
-      console.log('no fee');
-      this.setState(() => ({
-        feePrompt: 'No cancellation fee if you cancel now.'
-      }));
-    }
-  }
-
   handleConfirmation() {
-    ApiService.goGet('cancel', 'delete', { ride_id: this.props.rideId, cost_toke: this.props.costToken })
-    .then((response) => response.json())
-    .then((parsedResponse) => {
-      console.log(parsedResponse);
-    })
+    ApiService.goGet('rides/new', 'post', '')
+    .then(response => response.json())
+    .then(parsedResponse => {
+      if (parsedResponse['cost_token'])
+        this.setState(() => ({
+          primeTime: true
+        }));
+      } else {
+        this.setState(() => ({
+          confirmed: 'confirmed'
+        }));
+      }
+    )
   }
 
   handleDecline() {
-    this.checkForFee();
     this.setState(() => ({
       confirmed: 'declined'
     }));
-    console.log(this.state.confirmed);
   }
 
   handleHomeClick() {
@@ -69,10 +57,9 @@ export default class CancelConfirmationPage extends Component {
           <Card
           containerStyle={styles.cardStyle}
           wrapperStyle={{ height: 20 }}
-          title='Confirm Ride Cancellation'>
-            <Text style={styles.textStyle}>Are you sure you want to</Text>
-            <Text style={styles.textStyle}>cancel your ride?</Text>
-            <Text style={styles.textStyle}>{this.state.prompt}</Text>
+          title='Confirm Your Price'>
+            <Text style={styles.textStyle}>This ride will cost: {this.props.price}</Text>
+            <Text style={styles.textStyle}>Does this work for you?</Text>
           </Card>
           <View style={styles.buttonContainer}>
             <Button
@@ -82,16 +69,18 @@ export default class CancelConfirmationPage extends Component {
               onPress={this.handleConfirmation} />
             <Button
               buttonStyle={styles.buttonStyle}
-              title="NO"
+              title='NO'
               backgroundColor='#db504a'
               onPress={this.handleDecline} />
           </View>
         </React.Fragment>
       )
     } else if (this.state.confirmed === 'confirmed') {
-      content = <LandingPage />
+      content = <RidePage data={this.props.data} />
     } else if (this.state.confirmed === 'declined') {
-      content = <RidePage />
+      content = <LandingPage />
+    } else if (this.primeTime) {
+      content = <PrimeTimePage />
     }
 
     return (
@@ -110,13 +99,11 @@ const styles = StyleSheet.create({
   },
   cardStyle: {
     height: 200,
-    width: 250,
+    width: 250
   },
   textStyle: {
     textAlign: 'center',
-    color: '#333',
-    marginBottom: 5,
-    fontSize: 15,
+    fontSize: 17,
   },
   buttonStyle: {
     marginTop: 12,
