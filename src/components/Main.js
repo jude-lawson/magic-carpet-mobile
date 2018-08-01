@@ -59,21 +59,18 @@ export default class Main extends Component {
   render() {
     if (!this.state.isLoggedIn) {
       return(
-        <React.Fragment>
+        <View style={styles.view}>
           <Text style={styles.banner}>Magic Carpet</Text>
           <Text style={styles.text}>Forget it and Fly</Text>
           <Animation
             ref={animation => {
               this.animation = animation;
             }}
-            style={{
-              width: 400,
-              height: 400
-            }}
+            style={styles.animations}
             source={bouncy}
           />
           <Login />
-        </React.Fragment>
+        </View>
       )
     } else if (this.state.isLoggedIn) {
       return (
@@ -84,11 +81,22 @@ export default class Main extends Component {
 }
 
 const styles = StyleSheet.create ({
+  view:{
+    flex: 1,
+    justifyContent:"center",
+    alignItems:'center'
+  },
   banner: {
     textAlign: 'center',
     color: 'black',
-    marginBottom: 5,
+    margin: 5,
     fontSize: 40,
+  },
+  animations:{
+    height: 300,
+    width: 300,
+    marginBottom: 200
+
   },
   text: {
     textAlign: 'center',

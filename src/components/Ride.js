@@ -25,9 +25,7 @@ export default class Ride extends Component {
     }
     let cost_token = this.props.adventure.price_range.cost_token
     let ride = await ApiService.createRide({ origin: origin, destination: destination, cost_token: cost_token })
-    // ggo off and show them the shit
     console.log('Yes!')
-    // this shit goes here 
     this.setState({ estimateOpen: false, rideId: ride.ride_id })
   }
 
