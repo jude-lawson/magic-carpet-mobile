@@ -5,7 +5,7 @@ import { encode as btoa, decode as atob } from 'base-64';
 import { WebBrowser, SecureStore } from 'expo';
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
 
-import LandingPage from './LandingPage';
+import MagicCarpetButton from './MagicCarpetButton';
 import LyftService from '../services/LyftService';
 import HomeButton from './HomeButton';
 import CancelButton from './CancelButton';
@@ -20,7 +20,7 @@ export default class RidePage extends Component {
       desinationVisible: false,
       goHome: false,
       pickedUp: false,
-      rideStatus: 'Magic Carpet is locating your ride!'
+      rideStatus: 'Your'
     }
 
     this.rideStatus()
@@ -31,9 +31,15 @@ export default class RidePage extends Component {
   };
 
   rideStatus() {
-    LyftService.getStatus()
-    .then((response) => response.json())
-    .then((parsedResponse) => {
+    LyftService.getStatus(this.props.rideId)
+    .then(
+      (response) => {
+        response.json()
+      }
+    )
+    .then(
+      (parsedResponse) => {
+
       if (parsedResponse['status'] === 'pending') {
         var timer = setInterval(()=> this.rideStatus(), 15000);
       } else if (parsedResponse['status'] === 'accepted') {
@@ -83,9 +89,9 @@ export default class RidePage extends Component {
   render() {
     let content;
     if (this.state.goHome || this.state.rideCancelled) {
-      content = <LandingPage />
+      content = <MagicCarpetButton />
     } else if (this.state.pickedUp) {
-      content = <LandingPage />
+      content = <MagicCarpetButton />
     } else if (this.state.destinationVisible) {
       content = (
         <React.Fragment>
@@ -105,7 +111,7 @@ export default class RidePage extends Component {
           <HomeButton handleHomeClick={this.handleHomeClick} />
           <Card title='Ride Status' style={styles.header}>
             <Text style={styles.text}>{this.state.rideStatus}</Text>
-          </Card>
+          </Card> 
           <DestinationButton revealDestination={this.revealDestination} />
           <CancelButton cancelRide={this.cancelRide} />
         </React.Fragment>

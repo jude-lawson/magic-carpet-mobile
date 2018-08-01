@@ -58,18 +58,21 @@ class ApiService {
     let response = await ApiService.goGet('adventures', 'post', headers, ApiService.rideSettings(location, currentState))
     // Parse response
     let responseBody = await response.json()
-    return responseBody
+    
+    return {adventure: responseBody, origin: location}
   }
 
-  static acceptEstimate(adventureInfo){
-    return this.goGet('rides', 'post', adventureInfo)
+  static async createRide(rideInfo) {
+    let userInfo = await ApiService.getInfo()
+    let thing =  await ApiService.goGet('rides', 'post', userInfo , JSON.stringify(rideInfo))
+    let otherThing= await thing.json()
+    return otherThing
   }
 
   static async getInfo(){
     const token = await SecureStore.getItemAsync('lyft_token')
     const refresh_token = await SecureStore.getItemAsync('lyft_refresh_token')
     if (SecureStore.getItemAsync('id')) {
-      console.log("id found")
       const id = await SecureStore.getItemAsync('id')
       return { token: token, refresh_token: refresh_token, id: id}
     } else {
@@ -84,7 +87,6 @@ class ApiService {
     return JSON.parse(settings)
   }
 
-  //
 
   static async goGet(url_extension, method, headers=null, body=null){
 

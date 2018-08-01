@@ -6,7 +6,7 @@ import Settings from './Settings'
 import MagicCarpetButton from './MagicCarpetButton'
 import ErrorMessage from './ErrorMessage'
 import ApiService from '../services/ApiService';
-import Estimate from './Estimate'
+import Ride from './Ride'
 
 export default class Home extends Component {
   constructor(props) {
@@ -15,6 +15,7 @@ export default class Home extends Component {
     this.state = {
       intialSettings: this.props.settings,
       settingsOpen: false,
+      homeOpen: true,
       radius: [this.props.settings.min_radius, this.props.settings.max_radius],
       price: [this.props.settings.min_price, this.props.settings.max_price],
       rating: [this.props.settings.min_rating, this.props.settings.max_rating],
@@ -30,11 +31,11 @@ export default class Home extends Component {
   }
 
   handleHomeClick() {
-    this.setState({ settingsOpen: false })
+    this.setState({ settingsOpen: false, homeOpen: true, adventure: null })
   }
 
   toggleSettings() {
-    this.state.settingsOpen ? this.setState({ settingsOpen: false }) : this.setState({ settingsOpen: true })
+    this.state.settingsOpen ? this.setState({ settingsOpen: false, homeOpen: true}) : this.setState({ settingsOpen: true, homeOpen: false })
   }
 
   saveRadius(data) {
@@ -51,7 +52,11 @@ export default class Home extends Component {
 
   async handleMagicClick() {
     let createdAdventure = await ApiService.createAdventure(this.state)
-    this.setState({ adventure: createdAdventure })
+    this.setState({ 
+      adventure: createdAdventure.adventure,
+      origin: createdAdventure.origin,
+      homeOpen: false })
+    
   }
 
   render() {
@@ -69,7 +74,7 @@ export default class Home extends Component {
           currentRating={this.state.rating} 
           handleSaveClick={this.toggleSettings} />
       )
-    } else if (!this.state.settingsOpen && !this.state.adventure) {
+    } else if ((!this.state.settingsOpen && !this.state.adventure) || (this.state.homeOpen && !this.state.adventure))  {
       content = <MagicCarpetButton handleClick={this.handleMagicClick}/>
     } else if (!this.state.settingsOpen && this.state.error) {
       content = (
@@ -78,8 +83,10 @@ export default class Home extends Component {
           <MagicCarpetButton handleClick={this.handleMagicClick} />
         </React.Fragment>
       )
-    } else if (!this.state.settingsOpen && this.state.adventure) {
-      content = <Estimate adventure={this.state.adventure} />
+    } else if (!this.state.settingsOpen && this.state.adventure && !this.state.homeOpen) {
+      content = <Ride adventure={this.state.adventure}
+                      origin={this.state.origin}
+                      handleNoClick={this.handleHomeClick} />
     }
 
     return (
