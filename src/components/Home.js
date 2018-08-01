@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Animation from 'lottie-react-native';
 
 import HomeButton from './HomeButton'
 import SettingsButton from './SettingsButton'
@@ -8,7 +7,6 @@ import MagicCarpetButton from './MagicCarpetButton'
 import ErrorMessage from './ErrorMessage'
 import ApiService from '../services/ApiService';
 import Estimate from './Estimate'
-import flow from '../../assets/flow.json';
 
 export default class Home extends Component {
   constructor(props) {
@@ -73,22 +71,7 @@ export default class Home extends Component {
       )
     } else if (!this.state.settingsOpen && !this.state.adventure) {
       content = (
-        <React.Fragment>
-          <View>
-           <Animation
-             ref={animation => {
-               this.animation = animation;
-             }}
-             style={{
-               width: 100,
-               height: 80
-             }}
-             loop={true}
-             source={flow}
-           />
-         </View>
-         <MagicCarpetButton handleClick={this.handleMagicClick}/>
-       </React.Fragment>
+        <MagicCarpetButton handleClick={this.handleMagicClick}/>
       )
     } else if (!this.state.settingsOpen && this.state.error) {
       content = (

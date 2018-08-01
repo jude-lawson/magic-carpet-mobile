@@ -5,7 +5,7 @@ export default class Gradient extends Component {
   render() {
     return (
       <LinearGradient
-        colors={['#03063b', '#7998fe']}
+        colors={['#ffffff', '#ffffff']}
         style={{
           position: 'absolute',
           left: 0,
