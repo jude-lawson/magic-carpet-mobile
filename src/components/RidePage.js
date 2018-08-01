@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Button } from 'react-native';
+import { StyleSheet, Text, Button, TouchableOpacity, Alert } from 'react-native';
 import { Card } from 'react-native-elements';
 import { encode as btoa, decode as atob } from 'base-64';
 import { WebBrowser, SecureStore } from 'expo';
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
-
+import ApiService from '../services/ApiService';
 import MagicCarpetButton from './MagicCarpetButton';
 import LyftService from '../services/LyftService';
 import HomeButton from './HomeButton';
@@ -20,7 +20,8 @@ export default class RidePage extends Component {
       desinationVisible: false,
       goHome: false,
       pickedUp: false,
-      rideStatus: 'Your'
+      rideStatus: 'Your',
+      cancel_cost: null
     }
 
     this.rideStatus()
@@ -69,9 +70,61 @@ export default class RidePage extends Component {
   }
 
   cancelRide() {
-    this.setState(() => ({
-      rideCancelled: true
-    }));
+    ApiService.cancelRide(this.props.rideId)
+    .then(
+      (response)=>{
+        if (response.error) {
+          this._reallyCancel(`${response.amount / 100}.00`)
+        } else {
+          this.setState(() => ({
+            rideCancelled: true,
+            cancel_cost: response.amount
+          }));
+        }
+      })
+    
+  }
+
+   cancelIt() {
+    ApiService.confirmCancelRide(this.props.rideId, this.state.cancel_cost)
+    .then(()=>{
+      debugger
+      this.props.handleHomeClick()
+    })
+    .catch((error)=>console.log(error))
+  }
+
+  _reallyCancel(cancel_cost) {
+    Alert.alert(
+      'Cancel Your Ride?',
+      `Cancelling your ride will cost $${cancel_cost} \n Do you still wish to cancel?`,
+      [
+        {text: 'Cancel', onPress: () => 
+          console.log('Cancel Pressed'), style: 'cancel'
+        },
+        {text: 'OK', onPress: () =>{
+          this.cancelIt()
+        }},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  _cancelAlert = () => {
+    Alert.alert(
+      'Cancel Your Ride?',
+      "Would you like to cancel your ride?",
+      [
+        {text: 'Cancel', onPress: () => 
+          console.log('Cancel Pressed'), style: 'cancel'
+        },
+        {text: 'OK', onPress: () =>{
+          this.cancelRide()
+          // .then(()=>console.log('OK Pressed'))X
+        }},
+      ],
+      { cancelable: false }
+    )
   }
 
   revealDestination() {
@@ -107,14 +160,14 @@ export default class RidePage extends Component {
       )
     } else {
       content = (
-        <React.Fragment>
+        <TouchableOpacity>
           <HomeButton handleHomeClick={this.handleHomeClick} />
           <Card title='Ride Status' style={styles.header}>
             <Text style={styles.text}>{this.state.rideStatus}</Text>
           </Card> 
           <DestinationButton revealDestination={this.revealDestination} />
-          <CancelButton cancelRide={this.cancelRide} />
-        </React.Fragment>
+          <CancelButton cancelRide={this._cancelAlert} />
+        </TouchableOpacity>
       )
     }
 

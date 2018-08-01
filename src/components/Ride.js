@@ -48,7 +48,8 @@ export default class Ride extends Component {
       )
     } else if (!this.state.estimateOpen) {
       content = (
-        <RidePage rideId={this.state.rideId} />
+        <RidePage rideId={this.state.rideId}
+                  handleHomeClick={this.props.handleNoClick}/>
       )
     }
 

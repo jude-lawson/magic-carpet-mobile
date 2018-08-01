@@ -87,6 +87,18 @@ class ApiService {
     return JSON.parse(settings)
   }
 
+  static async cancelRide(rideInfo){
+    let user_info = await ApiService.getInfo()
+    let response = await ApiService.goGet('cancel', 'post', user_info, rideInfo)
+    return await response.json()
+  }
+
+  static async confirmCancelRide(rideId, costToken){
+    let user_info = await ApiService.getInfo()
+    let payload = {rideId: rideId, costToken: costToken}
+    let response = await ApiService.goGet('confirm', 'post', user_info, payload)
+  }
+
 
   static async goGet(url_extension, method, headers=null, body=null){
 
