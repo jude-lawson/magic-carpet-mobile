@@ -1,6 +1,6 @@
 // import JWT from 'expo-jwt'
 import { SecureStore } from 'expo';
-import { handshake, host_url, api_version, default_origin_latitude, default_origin_longitude } from '../../config'
+import { handshake, host_url, beta, default_origin_latitude, default_origin_longitude } from '../../config'
 
 class ApiService {
 
@@ -58,18 +58,21 @@ class ApiService {
     let response = await ApiService.goGet('adventures', 'post', headers, ApiService.rideSettings(location, currentState))
     // Parse response
     let responseBody = await response.json()
-    return responseBody
+    
+    return {adventure: responseBody, origin: location}
   }
 
-  static acceptEstimate(adventureInfo){
-    return this.goGet('rides', 'post', adventureInfo)
+  static async createRide(rideInfo) {
+    let userInfo = await ApiService.getInfo()
+    let thing =  await ApiService.goGet('rides', 'post', userInfo , JSON.stringify(rideInfo))
+    let otherThing= await thing.json()
+    return otherThing
   }
 
   static async getInfo(){
     const token = await SecureStore.getItemAsync('lyft_token')
     const refresh_token = await SecureStore.getItemAsync('lyft_refresh_token')
     if (SecureStore.getItemAsync('id')) {
-      console.log("id found")
       const id = await SecureStore.getItemAsync('id')
       return { token: token, refresh_token: refresh_token, id: id}
     } else {
@@ -81,14 +84,26 @@ class ApiService {
     let user_info = await ApiService.getInfo()
     let server_response = await this.goGet('users', 'post', user_info)
     let settings = await ApiService.decodeJwt(server_response.headers.map.authorization)
+    debugger
     return JSON.parse(settings)
   }
 
-  //
+  static async cancelRide(rideInfo){
+    let user_info = await ApiService.getInfo()
+    let response = await ApiService.goGet('cancel', 'post', user_info, rideInfo)
+    return await response.json()
+  }
+
+  static async confirmCancelRide(rideId, costToken){
+    let user_info = await ApiService.getInfo()
+    let payload = JSON.stringify({rideId: rideId, costToken: costToken})
+    let response = await ApiService.goGet('confirm', 'post', user_info, payload)
+  }
+
 
   static async goGet(url_extension, method, headers=null, body=null){
-
-    return await fetch(`${host_url}/${api_version}/${url_extension}`, {
+    
+    return await fetch(`${host_url}/${beta}/${url_extension}`, {
       method: method,
       headers: {
         payload: ApiService.encodeJwt(JSON.stringify(headers)),

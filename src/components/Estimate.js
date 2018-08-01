@@ -3,43 +3,24 @@ import { StyleSheet, View } from 'react-native'
 import { Card, Text, Button } from 'react-native-elements'
 
 export default class Estimate extends Component {
-  constructor(props) {
-    super(props)
-
-    this.handleYesClick = this.handleYesClick.bind(this)
-    this.handleNoClick = this.handleNoClick.bind(this)
-  }
-
-  handleYesClick() {
-    console.log('Yes!')
-  }
-
-  handleNoClick() {
-    console.log('No!')
-  }
-
-	render() {
-    let adventure = this.props.adventure
-    let minimum_cost = `$${(adventure.price_range.min_cost / 100)}.00`
-    let maximum_cost = `$${(adventure.price_range.max_cost / 100)}.00`
-
+  render() {
     return (
       <Card containerStyle={{ height: 200 }} >
-        <Text style={{ textAlign: 'center' }}>This adventure will cost about {minimum_cost} - {maximum_cost}</Text>
+        <Text style={{ textAlign: 'center' }}>This adventure will cost about {this.props.minimum_cost} - {this.props.maximum_cost}</Text>
         <Text style={{ textAlign: 'center' }}>Would you like to call a Lyft?</Text>
         <View style={styles.buttonContainer}>
           <Button
             buttonStyle={styles.buttonStyle}
             title='YES'
             backgroundColor='#4fb859'
-            onPress={this.handleYesClick}
-             />
+            onPress={this.props.handleYesClick}
+            />
           <Button
             buttonStyle={styles.buttonStyle}
             title='NO'
             backgroundColor='#db504a'
-            onPress={this.handleNoClick}
-             />
+            onPress={this.props.handleNoClick}
+            />
         </View>
       </Card>
     )

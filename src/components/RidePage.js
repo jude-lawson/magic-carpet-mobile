@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Button } from 'react-native';
+import { StyleSheet, Text, Button, TouchableOpacity, Alert } from 'react-native';
 import { Card } from 'react-native-elements';
 import { encode as btoa, decode as atob } from 'base-64';
 import { WebBrowser, SecureStore } from 'expo';
 import { lyft_client_id, lyft_client_secret } from '../../config.js';
-
-import LandingPage from './LandingPage';
+import ApiService from '../services/ApiService';
+import MagicCarpetButton from './MagicCarpetButton';
 import LyftService from '../services/LyftService';
 import HomeButton from './HomeButton';
 import CancelButton from './CancelButton';
@@ -20,20 +20,27 @@ export default class RidePage extends Component {
       desinationVisible: false,
       goHome: false,
       pickedUp: false,
-      rideStatus: 'Magic Carpet is locating your ride!'
+      rideStatus: 'Your ride is being called',
+      cancel_cost: null
     }
 
     this.rideStatus()
 
     this.cancelRide = this.cancelRide.bind(this)
     this.revealDestination = this.revealDestination.bind(this)
-    this.handleHomeClick = this.handleHomeClick.bind(this)
+    this.fuckinPrivateMethods = this.fuckinPrivateMethods.bind(this)
   };
 
   rideStatus() {
-    LyftService.getStatus()
-    .then((response) => response.json())
-    .then((parsedResponse) => {
+    LyftService.getStatus(this.props.rideId)
+    .then(
+      (response) => {
+        response.json()
+      }
+    )
+    .then(
+      (parsedResponse) => {
+
       if (parsedResponse['status'] === 'pending') {
         var timer = setInterval(()=> this.rideStatus(), 15000);
       } else if (parsedResponse['status'] === 'accepted') {
@@ -63,9 +70,60 @@ export default class RidePage extends Component {
   }
 
   cancelRide() {
-    this.setState(() => ({
-      rideCancelled: true
-    }));
+    ApiService.cancelRide(this.props.rideId)
+    .then(
+      (response)=>{
+        if (response.error) {
+          this._reallyCancel(`${response.amount / 100}.00`)
+        } else {
+          this.setState(() => ({
+            rideCancelled: true,
+            cancel_cost: response.amount
+          }));
+        }
+      })
+    
+  }
+
+   confirmCancelation() {
+    ApiService.confirmCancelRide(this.props.rideId, this.state.cancel_cost)
+    .then(()=>{
+      this.props.handleHomeClick()
+    })
+    .catch((error)=>console.log(error))
+  }
+
+  _reallyCancel(cancel_cost) {
+    Alert.alert(
+      'Cancel Your Ride?',
+      `Cancelling your ride will cost $${cancel_cost} \n Do you still wish to cancel?`,
+      [
+        {text: 'Cancel', onPress: () => 
+          console.log('Cancel Pressed'), style: 'cancel'
+        },
+        {text: 'OK', onPress: () =>{
+          this.confirmCancelation()
+        }},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  _cancelAlert = () => {
+    Alert.alert(
+      'Cancel Your Ride?',
+      "Would you like to cancel your ride?",
+      [
+        {text: 'Cancel', onPress: () => 
+          console.log('Cancel Pressed'), style: 'cancel'
+        },
+        {text: 'OK', onPress: () =>{
+          this.cancelRide()
+          // .then(()=>console.log('OK Pressed'))X
+        }},
+      ],
+      { cancelable: false }
+    )
   }
 
   revealDestination() {
@@ -74,46 +132,48 @@ export default class RidePage extends Component {
     }));
   }
 
-  handleHomeClick() {
-    this.setState(() => ({
-      goHome: true
-    }));
+  // handleHomeClick() {
+  //   this.setState(() => ({
+  //     goHome: true
+  //   }));
+  // }
+  fuckinPrivateMethods(){
+    this._cancelAlert()
   }
 
   render() {
     let content;
     if (this.state.goHome || this.state.rideCancelled) {
-      content = <LandingPage />
+      content = <MagicCarpetButton />
     } else if (this.state.pickedUp) {
-      content = <LandingPage />
+      content = <MagicCarpetButton />
     } else if (this.state.destinationVisible) {
       content = (
         <React.Fragment>
-          <HomeButton handleHomeClick={this.handleHomeClick} />
           <Card
             title='This is your destination'>
-            <Text>Name: {this.props.data.name}</Text>
-            <Text>Address: {this.props.data.street_address}</Text>
-            <Text>City: {this.props.data.city}</Text>
-            <Text>Rating: {this.props.data.rating}</Text>
+            <Text>Name: {this.props.adventure.destination.name}</Text>
+            <Text>Address: {this.props.adventure.destination.street_address}</Text>
+            <Text>City: {this.props.adventure.destination.city}</Text>
+            <Text>Rating: {this.props.adventure.destination.rating}</Text>
           </Card>
         </React.Fragment>
       )
     } else {
       content = (
-        <React.Fragment>
-          <HomeButton handleHomeClick={this.handleHomeClick} />
+        <TouchableOpacity>
           <Card title='Ride Status' style={styles.header}>
             <Text style={styles.text}>{this.state.rideStatus}</Text>
-          </Card>
+          </Card> 
           <DestinationButton revealDestination={this.revealDestination} />
-          <CancelButton cancelRide={this.cancelRide} />
-        </React.Fragment>
+          <CancelButton cancelRide={this._cancelAlert} />
+        </TouchableOpacity>
       )
     }
 
     return (
       <React.Fragment>
+        <HomeButton handleClick={this.fuckinPrivateMethods}/>
         {content}
       </React.Fragment>
     );
