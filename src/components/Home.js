@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Animation from 'lottie-react-native';
 
 import HomeButton from './HomeButton'
 import SettingsButton from './SettingsButton'
@@ -7,6 +8,7 @@ import MagicCarpetButton from './MagicCarpetButton'
 import ErrorMessage from './ErrorMessage'
 import ApiService from '../services/ApiService';
 import Estimate from './Estimate'
+import flow from '../../assets/flow.json';
 
 export default class Home extends Component {
   constructor(props) {
@@ -44,7 +46,7 @@ export default class Home extends Component {
   savePrice(data) {
     this.setState({ price: [data[0], data[1]] })
   }
-  
+
   saveRating(data) {
     this.setState({ rating: [data[0], data[1]] })
   }
@@ -59,18 +61,35 @@ export default class Home extends Component {
 
     if (this.state.settingsOpen) {
       content = (
-        <Settings 
+        <Settings
           settings={this.state.initialSettings}
-          handleSaveRadius={this.saveRadius} 
-          handleSavePrice={this.savePrice} 
-          handleSaveRating={this.saveRating}  
-          currentRadius={this.state.radius} 
-          currentPrice={this.state.price} 
-          currentRating={this.state.rating} 
+          handleSaveRadius={this.saveRadius}
+          handleSavePrice={this.savePrice}
+          handleSaveRating={this.saveRating}
+          currentRadius={this.state.radius}
+          currentPrice={this.state.price}
+          currentRating={this.state.rating}
           handleSaveClick={this.toggleSettings} />
       )
     } else if (!this.state.settingsOpen && !this.state.adventure) {
-      content = <MagicCarpetButton handleClick={this.handleMagicClick}/>
+      content = (
+        <React.Fragment>
+          <View>
+           <Animation
+             ref={animation => {
+               this.animation = animation;
+             }}
+             style={{
+               width: 100,
+               height: 80
+             }}
+             loop={true}
+             source={flow}
+           />
+         </View>
+         <MagicCarpetButton handleClick={this.handleMagicClick}/>
+       </React.Fragment>
+      )
     } else if (!this.state.settingsOpen && this.state.error) {
       content = (
         <React.Fragment>
