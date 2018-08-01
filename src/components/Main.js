@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import { WebBrowser, Linking } from 'expo'
 import { encode as btoa } from 'base-64'
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-elements';
+import Animation from 'lottie-react-native';
 
 import { lyft_client_id, lyft_client_secret } from '../../config'
 import LyftService from '../services/LyftService'
 import ApiService from '../services/ApiService'
+import bouncy from '../../assets/animations/bouncy.json';
 import Home from './Home'
 import Login from './Login'
 
@@ -16,7 +20,6 @@ export default class Main extends Component {
       isLoggedIn: false,
       settings: null
 
-      // The settings below are only for skipping login
       // isLoggedIn: true,
       // settings: {
       //   max_price: 4,
@@ -32,7 +35,8 @@ export default class Main extends Component {
   }
 
   componentDidMount() {
-    Linking.addEventListener('url', this.handleCallback)
+    Linking.addEventListener('url', this.handleCallback);
+    this.animation.play();
   }
 
   handleCallback(event) {
@@ -47,7 +51,7 @@ export default class Main extends Component {
             this.setState({ isLoggedIn: true, settings: settings_from_server.settings })
           })
         }
-        
+
         WebBrowser.dismissBrowser()
       });
   }
@@ -55,7 +59,21 @@ export default class Main extends Component {
   render() {
     if (!this.state.isLoggedIn) {
       return(
-        <Login />
+        <React.Fragment>
+          <Text style={styles.banner}>Magic Carpet</Text>
+          <Text style={styles.text}>Forget it and Fly</Text>
+          <Animation
+            ref={animation => {
+              this.animation = animation;
+            }}
+            style={{
+              width: 400,
+              height: 400
+            }}
+            source={bouncy}
+          />
+          <Login />
+        </React.Fragment>
       )
     } else if (this.state.isLoggedIn) {
       return (
@@ -64,3 +82,18 @@ export default class Main extends Component {
     }
   }
 }
+
+const styles = StyleSheet.create ({
+  banner: {
+    textAlign: 'center',
+    color: 'black',
+    marginBottom: 5,
+    fontSize: 40,
+  },
+  text: {
+    textAlign: 'center',
+    color: 'black',
+    marginBottom: 15,
+    fontSize: 20,
+  }
+});

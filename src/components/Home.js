@@ -45,7 +45,7 @@ export default class Home extends Component {
   savePrice(data) {
     this.setState({ price: [data[0], data[1]] })
   }
-  
+
   saveRating(data) {
     this.setState({ rating: [data[0], data[1]] })
   }
@@ -64,14 +64,14 @@ export default class Home extends Component {
 
     if (this.state.settingsOpen) {
       content = (
-        <Settings 
+        <Settings
           settings={this.state.initialSettings}
-          handleSaveRadius={this.saveRadius} 
-          handleSavePrice={this.savePrice} 
-          handleSaveRating={this.saveRating}  
-          currentRadius={this.state.radius} 
-          currentPrice={this.state.price} 
-          currentRating={this.state.rating} 
+          handleSaveRadius={this.saveRadius}
+          handleSavePrice={this.savePrice}
+          handleSaveRating={this.saveRating}
+          currentRadius={this.state.radius}
+          currentPrice={this.state.price}
+          currentRating={this.state.rating}
           handleSaveClick={this.toggleSettings} />
       )
     } else if ((!this.state.settingsOpen && !this.state.adventure) || (this.state.homeOpen && !this.state.adventure))  {
