@@ -1,6 +1,6 @@
 // import JWT from 'expo-jwt'
 import { SecureStore } from 'expo';
-import { handshake, host_url, api_version, default_origin_latitude, default_origin_longitude } from '../../config'
+import { handshake, host_url, beta, default_origin_latitude, default_origin_longitude } from '../../config'
 
 class ApiService {
 
@@ -84,6 +84,7 @@ class ApiService {
     let user_info = await ApiService.getInfo()
     let server_response = await this.goGet('users', 'post', user_info)
     let settings = await ApiService.decodeJwt(server_response.headers.map.authorization)
+    debugger
     return JSON.parse(settings)
   }
 
@@ -95,14 +96,14 @@ class ApiService {
 
   static async confirmCancelRide(rideId, costToken){
     let user_info = await ApiService.getInfo()
-    let payload = {rideId: rideId, costToken: costToken}
+    let payload = JSON.stringify({rideId: rideId, costToken: costToken})
     let response = await ApiService.goGet('confirm', 'post', user_info, payload)
   }
 
 
   static async goGet(url_extension, method, headers=null, body=null){
-
-    return await fetch(`${host_url}/${api_version}/${url_extension}`, {
+    
+    return await fetch(`${host_url}/${beta}/${url_extension}`, {
       method: method,
       headers: {
         payload: ApiService.encodeJwt(JSON.stringify(headers)),

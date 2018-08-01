@@ -20,7 +20,7 @@ export default class RidePage extends Component {
       desinationVisible: false,
       goHome: false,
       pickedUp: false,
-      rideStatus: 'Your',
+      rideStatus: 'Your ride is being called',
       cancel_cost: null
     }
 
@@ -28,7 +28,7 @@ export default class RidePage extends Component {
 
     this.cancelRide = this.cancelRide.bind(this)
     this.revealDestination = this.revealDestination.bind(this)
-    this.handleHomeClick = this.handleHomeClick.bind(this)
+    this.fuckinPrivateMethods = this.fuckinPrivateMethods.bind(this)
   };
 
   rideStatus() {
@@ -85,10 +85,9 @@ export default class RidePage extends Component {
     
   }
 
-   cancelIt() {
+   confirmCancelation() {
     ApiService.confirmCancelRide(this.props.rideId, this.state.cancel_cost)
     .then(()=>{
-      debugger
       this.props.handleHomeClick()
     })
     .catch((error)=>console.log(error))
@@ -103,7 +102,7 @@ export default class RidePage extends Component {
           console.log('Cancel Pressed'), style: 'cancel'
         },
         {text: 'OK', onPress: () =>{
-          this.cancelIt()
+          this.confirmCancelation()
         }},
       ],
       { cancelable: false }
@@ -133,10 +132,13 @@ export default class RidePage extends Component {
     }));
   }
 
-  handleHomeClick() {
-    this.setState(() => ({
-      goHome: true
-    }));
+  // handleHomeClick() {
+  //   this.setState(() => ({
+  //     goHome: true
+  //   }));
+  // }
+  fuckinPrivateMethods(){
+    this._cancelAlert()
   }
 
   render() {
@@ -148,20 +150,18 @@ export default class RidePage extends Component {
     } else if (this.state.destinationVisible) {
       content = (
         <React.Fragment>
-          <HomeButton handleHomeClick={this.handleHomeClick} />
           <Card
             title='This is your destination'>
-            <Text>Name: {this.props.data.name}</Text>
-            <Text>Address: {this.props.data.street_address}</Text>
-            <Text>City: {this.props.data.city}</Text>
-            <Text>Rating: {this.props.data.rating}</Text>
+            <Text>Name: {this.props.adventure.destination.name}</Text>
+            <Text>Address: {this.props.adventure.destination.street_address}</Text>
+            <Text>City: {this.props.adventure.destination.city}</Text>
+            <Text>Rating: {this.props.adventure.destination.rating}</Text>
           </Card>
         </React.Fragment>
       )
     } else {
       content = (
         <TouchableOpacity>
-          <HomeButton handleHomeClick={this.handleHomeClick} />
           <Card title='Ride Status' style={styles.header}>
             <Text style={styles.text}>{this.state.rideStatus}</Text>
           </Card> 
@@ -173,6 +173,7 @@ export default class RidePage extends Component {
 
     return (
       <React.Fragment>
+        <HomeButton handleClick={this.fuckinPrivateMethods}/>
         {content}
       </React.Fragment>
     );
