@@ -70,8 +70,8 @@ class ApiService {
   }
 
   static async getInfo(){
-    const token = await SecureStore.getItemAsync('lyft_token')
-    const refresh_token = await SecureStore.getItemAsync('lyft_refresh_token')
+    const token = await SecureStore.getItemAsync('access_token')
+    const refresh_token = await SecureStore.getItemAsync('refresh_token')
     if (SecureStore.getItemAsync('id')) {
       const id = await SecureStore.getItemAsync('id')
       return { token: token, refresh_token: refresh_token, id: id}
@@ -84,7 +84,6 @@ class ApiService {
     let user_info = await ApiService.getInfo()
     let server_response = await this.goGet('users', 'post', user_info)
     let settings = await ApiService.decodeJwt(server_response.headers.map.authorization)
-    debugger
     return JSON.parse(settings)
   }
 

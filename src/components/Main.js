@@ -42,7 +42,6 @@ export default class Main extends Component {
   handleCallback(event) {
     const auth_code = event.url.split('?')[1].split('&')[0].split('=')[1]
     const enc_client_auth = btoa(`${lyft_client_id}:${lyft_client_secret}`)
-
     LyftService.isAuthorized(auth_code, enc_client_auth)
       .then((access) => {
         if (access) {

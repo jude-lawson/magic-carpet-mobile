@@ -32,7 +32,8 @@ class LyftService {
   }
 
   static async getStatus(rideId) {
-    let lyftApiKey = await SecureStore.getItemAsync('lyft_token').catch(() => console.log('no token!'));
+    let lyftApiKey = await SecureStore.getItemAsync('access_token')
+                          .catch(() => console.log('no token!'));
     return fetch(`https://api.lyft.com/v1/rides/${rideId}`, {
       method: 'get',
       headers: {
