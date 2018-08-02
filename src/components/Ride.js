@@ -16,6 +16,9 @@ export default class Ride extends Component {
     this.state = {
       estimateOpen: true,
       rideId: null
+
+      // estimateOpen: false,
+      // rideId: 123
     }
     this.handleYesClick = this.handleYesClick.bind(this)
     this.cancelRide = this.cancelRide.bind(this)
@@ -30,9 +33,64 @@ export default class Ride extends Component {
     // }
     // let cost_token = this.props.adventure.price_range.cost_token
     // let ride = await ApiService.createRide({ origin: origin, destination: destination, cost_token: cost_token })
-    console.log('Yes!')
-    let mock_id = 123
-    this.setState({ estimateOpen: false, rideId: mock_id })
+
+    var access_token = await SecureStore.getItemAsync('access_token')
+    var post_body = JSON.stringify({
+      ride_type: 'lyft',
+      origin: {
+        lat: 39.7513723,
+        lng: -104.9965242
+      },
+      destination: {
+        lat: 39.7516527,
+        lng: -105.0016258
+      }
+    })
+    // let response = await fetch('http://localhost:3000/api/v1/rides', { method: 'POST' })
+    // let parsedResponse = await response.json()
+    let response = await fetch('https://api.lyft.com/v1/rides', {
+      method: 'POST',
+      headers: {
+        'Authorization': `bearer ${access_token}`,
+        'Content-Type': 'application/json'
+      },
+      body: post_body
+    })
+
+    let parsedResponse = await response.json()
+
+    console.log(parsedResponse)
+
+    if (parsedResponse.error === 'primetime_confirmation_required') {
+      Alert.alert(
+        'Prime Time Confirmation Required',
+        "There is an additional primetime cost for this ride from Lyft. Would you like to accept this additional cost?",
+        [
+          {text: 'Cancel', onPress: () => { 
+            this.throwCancelConfirmation() 
+          }, style: 'cancel'
+          },
+          {text: 'OK', onPress: () =>{
+            fetch('https://api.lyft.com/v1/rides', {
+              method: 'POST',
+              headers: {
+                'Authorization': `bearer ${access_token}`,
+                'Content-Type': 'application/json'
+              },
+              body: post_body
+            }).then(response => response.json())
+              .then(parsedResponse => {
+                console.log(parsedResponse)
+                this.setState({ estimateOpen: false, rideId: parsedResponse.ride_id })
+              })
+          }},
+        ],
+        { cancelable: false }
+      )
+    } else {
+      console.log("Ride called")
+      this.setState({ estimateOpen: false, rideId: parsedResponse.ride_id })
+    }
   }
 
   throwCancelConfirmation() {
@@ -83,13 +141,13 @@ export default class Ride extends Component {
             console.log('Cancelling...')
             console.log(this.state.rideId)
             console.log(access_token)
-            // fetch(`https://api.lyft.com/v1/rides/${this.state.rideId}/cancel`, {
-            //   method: 'POST',
-            //   headers: {
-            //     'Authorization': `Bearer ${access_token}`,
-            //     'Content-Type': 'application/json'
-            //   }
-            // })
+            fetch(`https://api.lyft.com/v1/rides/${this.state.rideId}/cancel`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${access_token}`,
+                'Content-Type': 'application/json'
+              }
+            })
           }},
         ],
         { cancelable: false }
