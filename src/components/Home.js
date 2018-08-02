@@ -52,6 +52,7 @@ export default class Home extends Component {
 
   async handleMagicClick() {
     let createdAdventure = await ApiService.createAdventure(this.state)
+    console.log(createdAdventure)
     this.setState({ 
       adventure: createdAdventure.adventure,
       origin: createdAdventure.origin,
