@@ -1,6 +1,7 @@
 // import JWT from 'expo-jwt'
 import { SecureStore } from 'expo';
 import { handshake, host_url, beta, default_origin_latitude, default_origin_longitude } from '../../config'
+import { Permissions, Location } from 'expo'
 
 class ApiService {
 
@@ -39,12 +40,22 @@ class ApiService {
     // Get the location
     if (Expo.Constants.isDevice) {
       console.log('Is a real device.')
-      let { status } = await PermissionRequest.askAsync(Permissions.LOCATION)
+      let { status } = await Permissions.askAsync(Permissions.LOCATION)
+      console.log('This is the status')
+      console.log(status)
       if (status !== 'granted') {
         this.setState({ error: 'Permission to access location was denied' })
+        console.log(this.state.error)
       }
       
-      var location = await Location.getCurrentPositionAsync({})
+      var coordinates = await Location.getCurrentPositionAsync({})
+      console.log(coordinates.coords.latitude)
+      console.log(coordinates.coords.longitude)
+      
+      var location = ({
+        latitude: coordinates.coords.latitude,
+        longitude: coordinates.coords.longitude
+      })
     } else {
       var location = ({
         latitude: default_origin_latitude,
@@ -52,13 +63,16 @@ class ApiService {
       })
     }
 
+    console.log(location)
+
     // Get user info from SecureStore
     let headers = await ApiService.getInfo()
+    console.log(headers)
     // Post to API to createAdventure
     let response = await ApiService.goGet('adventures', 'post', headers, ApiService.rideSettings(location, currentState))
     // Parse response
     let responseBody = await response.json()
-    
+    console.log(responseBody)
     return {adventure: responseBody, origin: location}
   }
 
@@ -84,6 +98,9 @@ class ApiService {
     let user_info = await ApiService.getInfo()
     let server_response = await this.goGet('users', 'post', user_info)
     let settings = await ApiService.decodeJwt(server_response.headers.map.authorization)
+    let parsedSettings = JSON.parse(settings)
+    let stored_id = await SecureStore.setItemAsync('id', String(parsedSettings.id))
+    let the_id = await SecureStore.getItemAsync('id')
     return JSON.parse(settings)
   }
 

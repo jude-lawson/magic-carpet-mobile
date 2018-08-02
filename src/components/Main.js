@@ -42,6 +42,8 @@ export default class Main extends Component {
   handleCallback(event) {
     const auth_code = event.url.split('?')[1].split('&')[0].split('=')[1]
     const enc_client_auth = btoa(`${lyft_client_id}:${lyft_client_secret}`)
+    console.log(auth_code)
+    console.log(enc_client_auth)
     LyftService.isAuthorized(auth_code, enc_client_auth)
       .then((access) => {
         if (access) {
@@ -63,10 +65,11 @@ export default class Main extends Component {
           <Text style={styles.text}>Forget it and Fly</Text>
           <Animation
             ref={animation => {
-              this.animation = animation;
+            this.animation = animation;
             }}
             style={styles.animations}
             source={bouncy}
+            resizeMode="cover"
           />
           <Login />
         </View>
@@ -79,11 +82,38 @@ export default class Main extends Component {
   }
 }
 
+// const styles = StyleSheet.create ({
+//   view:{
+//     flex: 1,
+//     justifyContent:"center",
+//     alignItems:'center'
+//   },
+//   banner: {
+//     textAlign: 'center',
+//     color: 'black',
+//     margin: 5,
+//     fontSize: 40,
+//   },
+//   animations:{
+//     height: 300,
+//     width: 300,
+//     marginBottom: 200
+
+//   },
+//   text: {
+//     textAlign: 'center',
+//     color: 'black',
+//     marginBottom: 15,
+//     fontSize: 20,
+//   }
+// });
+
 const styles = StyleSheet.create ({
   view:{
-    flex: 1,
-    justifyContent:"center",
-    alignItems:'center'
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
   },
   banner: {
     textAlign: 'center',
@@ -92,15 +122,13 @@ const styles = StyleSheet.create ({
     fontSize: 40,
   },
   animations:{
-    height: 300,
-    width: 300,
-    marginBottom: 200
-
+    height: 380,
+    width: 200,
   },
   text: {
     textAlign: 'center',
     color: 'black',
-    marginBottom: 15,
+    marginBottom: 45,
     fontSize: 20,
   }
 });
